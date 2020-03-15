@@ -7,4 +7,28 @@ It will work as an Address Book where you can choose who can see your informatio
 For example for a coworker or a client you would choose to share with them your telephone number, work email and even LinkedIn profile but
 for a family member or friend you would share your Facebook, Instagram and a personal email.
 
+# addressbook
+
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
 
