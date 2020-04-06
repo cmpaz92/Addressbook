@@ -5,7 +5,7 @@
         <p class="infoParagraph">Addressio helps to store all your social media profiles in one place. It makes it easy to share and find 
           people - see it as an universal addressbook that collects and connects! 
         </p>
-        <router-link to="/contacts"><button class="getStartedButton">Get Started</button></router-link>
+        <router-link to="/signup"><button class="getStartedButton">Get Started</button></router-link>
     </div>
 
     <transition name="fade" mode="out-in">
@@ -47,6 +47,7 @@ export default {
     border-radius: 8px 8px 8px 8px;
     -moz-border-radius: 8px 8px 8px 8px;
     -webkit-border-radius: 8px 8px 8px 8px;
+    margin-top:40px;
   }
 
   h1{
@@ -61,9 +62,9 @@ export default {
     margin-bottom: 20px;
   }
 
-  .getStartedButton{
+  button.getStartedButton{
     background-color: transparent;
-    border: solid 1px white;
+    border: 2px white solid;
     color: white;
     padding: 10px 7px;
     text-align: center;
@@ -77,8 +78,8 @@ export default {
     transition: ease 200ms;
   }
 
-  .getStartedButton:hover{
-    border: solid 1px transparent;
+  button.getStartedButton:hover{
+    border: solid 2px transparent;
     background-color: #394140;
     transition: ease 200ms;
   }
