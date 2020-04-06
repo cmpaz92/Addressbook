@@ -4,7 +4,7 @@
   };
 */
 const mongoose = require("mongoose");
-const MONGOURI = "mongodb://localhost:27017/authapp";
+const MONGOURI = "mongodb+srv://cmp0592:5KW0wtwy@cluster0-uvayi.mongodb.net/test?retryWrites=true&w=majority";
 
 const InitiateMongoServer = async () => {
   try {
