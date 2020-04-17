@@ -3,11 +3,14 @@ const bodyParser = require("body-parser");
 const user = require("./api/user/route/user"); //new addition
 const InitiateMongoServer = require("./config/db");
 
+var cors = require('cors')
+
+
 // Initiate Mongo Server
 InitiateMongoServer();
 
 const app = express();
-
+app.use(cors())
 // PORT
 const PORT = process.env.PORT || 4000;
 

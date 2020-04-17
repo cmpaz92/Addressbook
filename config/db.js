@@ -5,7 +5,7 @@
 */
 const mongoose = require("mongoose");
 const MONGOURI = "mongodb+srv://cmp0592:5KW0wtwy@cluster0-uvayi.mongodb.net/test?retryWrites=true&w=majority";
-
+mongoose.set('useUnifiedTopology', true);
 const InitiateMongoServer = async () => {
   try {
     await mongoose.connect(MONGOURI, {
