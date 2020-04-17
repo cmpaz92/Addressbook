@@ -60,8 +60,8 @@ export default {
     },
     login: function() {
       this.$http
-        //.post("https://addresio.herokuapp.com/user/login", {
-       .post("http://localhost:4000/user/login", {
+        .post(this.$api+"/user/login", {
+       //.post("http://localhost:4000/user/login", {
           email: this.email,
           password: this.password
         })

@@ -40,7 +40,7 @@ export default {
     getuser: function() {
         this.$http
         //.post("https://addresio.herokuapp.com/user/signup", {
-        .get("http://localhost:4000/user/" + localStorage.getItem("id"), {
+        .get(this.api+"/user/" + localStorage.getItem("id"), {
           headers: { token: localStorage.getItem("user") }
         })
          .then(response => (this.items = response))
@@ -51,7 +51,7 @@ export default {
     updateuser: function() {
       this.$http
         //.post("https://addresio.herokuapp.com/user/signup", {
-        .get("http://localhost:4000/user/" + localStorage.getItem("id"), {
+        .get(this.$api+"/user/" + localStorage.getItem("id"), {
           headers: { token: localStorage.getItem("user") }
         })
         .then(function(response) {

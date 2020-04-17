@@ -53,7 +53,7 @@ export default {
       this.$http
         //.post("https://addresio.herokuapp.com/user/login", {
         .post(
-          "http://localhost:4000/user/search",
+          this.$api+"/user/search",
           { username: this.input },
           { headers: { token: localStorage.getItem("user") } }
         )
@@ -67,7 +67,7 @@ export default {
       this.$http
         //.post("https://addresio.herokuapp.com/user/login", {
         .post(
-          "http://localhost:4000/user/search",
+          this.$api+"/user/search",
           { username: this.input },
           { headers: { token: localStorage.getItem("user") } }
         )

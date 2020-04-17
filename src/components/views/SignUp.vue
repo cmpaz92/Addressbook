@@ -58,14 +58,13 @@ export default {
     },
     signup: function() {
       this.$http
-        //.post("https://addresio.herokuapp.com/user/signup", {
-        .post("http://localhost:4000/user/signup", {
+        .post(this.$api+"/user/signup", {
+        //.post("http://localhost:4000/user/signup", {
           username: this.username,
           email: this.email,
           password: this.password
         })
         .then(function(response) {
-          console.log(response.data.token);
           if (response.data.token) {
             localStorage.setItem("user", JSON.stringify(response.data.token));
             localStorage.setItem("id", JSON.stringify(response.data.user.id));

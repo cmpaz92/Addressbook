@@ -7,22 +7,22 @@
         <router-link to="/">
           <p class="navElement">Home</p>
         </router-link>
-        <router-link v-if="user != null" to="/contacts">
+        <router-link v-if="this.$user != null" to="/contacts">
           <p class="navElement">Contacts</p>
         </router-link>
-        <router-link v-if="user != null" to="/mySocial">
+        <router-link v-if="this.$user != null" to="/mySocial">
           <p class="navElement">My Socials</p>
         </router-link>
-        <router-link v-if="user != null" to="/search">
+        <router-link v-if="this.$user != null" to="/search">
           <p class="navElement">Search</p>
         </router-link>
-        <router-link v-if="user == null" to="/signUp">
+        <router-link v-if="this.$user == null" to="/signUp">
           <p class="navElement">Sign Up</p>
         </router-link>
-        <router-link v-if="user == null" to="/login">
+        <router-link v-if="this.$user == null" to="/login">
           <p class="navElement">Login</p>
         </router-link>
-        <div v-if="user != null" @click.prevent="logOut">
+        <div v-if="this.$user != null" @click.prevent="logOut">
           <p class="navElement">Logout</p>
         </div>
       </div>
@@ -38,8 +38,6 @@ export default {
   name: "App",
   data() {
      return {
-    user: localStorage.getItem("user"),
-    id: localStorage.getItem("id"),
      }
   },
   computed: {
@@ -55,7 +53,7 @@ export default {
   },
   logOut() {
       localStorage.removeItem("user");
-      this.user = null;
+      this.$user = null;
       this.$router.push("/logout");
     }
   }
