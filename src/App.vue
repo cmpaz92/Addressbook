@@ -1,14 +1,30 @@
 <template>
   <div id="app">
     <div class="headerHeader">
-        <!-- <img class="logo" src="./assets/logo.png"> -->
-        <span>Addressio</span>
+      <!-- <img class="logo" src="./assets/logo.png"> -->
+      <span>Addressio</span>
       <div>
-        <router-link to="/"><p class="navElement">Home</p></router-link>
-        <router-link to="/contacts"><p class="navElement">Contacts</p></router-link>
-        <router-link to="/mySocial"><p class="navElement">My Socials</p></router-link>
-        <router-link to="/signUp"><p class="navElement">Sign Up</p></router-link>
-        <router-link to="/login"><p class="navElement">Login</p></router-link>
+        <router-link to="/">
+          <p class="navElement">Home</p>
+        </router-link>
+        <router-link v-if="this.$user != null" to="/contacts">
+          <p class="navElement">Contacts</p>
+        </router-link>
+        <router-link v-if="this.$user != null" to="/mySocial">
+          <p class="navElement">My Socials</p>
+        </router-link>
+        <router-link v-if="this.$user != null" to="/search">
+          <p class="navElement">Search</p>
+        </router-link>
+        <router-link v-if="this.$user == null" to="/signUp">
+          <p class="navElement">Sign Up</p>
+        </router-link>
+        <router-link v-if="this.$user == null" to="/login">
+          <p class="navElement">Login</p>
+        </router-link>
+        <div v-if="this.$user != null" @click.prevent="logOut">
+          <p class="navElement">Logout</p>
+        </div>
       </div>
     </div>
     <transition name="fade" mode="out-in">
@@ -18,10 +34,30 @@
 </template>
 
 <script>
-
 export default {
-  name: 'App',
-}
+  name: "App",
+  data() {
+     return {
+     }
+  },
+  computed: {
+    loggedIn() {
+      return localStorage.getItem("user");
+    }
+  },
+  methods: {
+  created() {
+    if (this.loggedIn) {
+      this.$router.push('/');
+    }
+  },
+  logOut() {
+      localStorage.removeItem("user");
+      this.$user = null;
+      this.$router.push("/logout");
+    }
+  }
+};
 </script>
 
 <style>
@@ -33,8 +69,8 @@ export default {
   color: #2c3e50;
 }
 
-html{
-  background-color:#EFF1F0;
+html {
+  background-color: #eff1f0;
 }
 
 button {
@@ -43,13 +79,13 @@ button {
 
 a {
   text-decoration: none;
-  margin:0px;
-  padding:0px;
+  margin: 0px;
+  padding: 0px;
   color: white;
   cursor: pointer;
 }
 
-input{
+input {
   margin-top: 20px;
   border: none;
   font-size: 1rem;
@@ -57,45 +93,47 @@ input{
   border-bottom: 2px white solid;
 }
 
-.headerHeader{
+.headerHeader {
   display: flex;
   justify-content: space-evenly;
-  margin:auto;
-  width:30%;
+  margin: auto;
+  width: 30%;
   flex-wrap: wrap;
   align-items: center;
   border-bottom: solid 3px black;
 }
 
 ul {
-    list-style-type: none;
-    padding-left:0px;
+  list-style-type: none;
+  padding-left: 0px;
 }
 
-li{
+li {
   font-size: 14px;
   margin-bottom: 5px;
 }
 
-span{
+span {
   font-weight: bold;
   cursor: default;
 }
 
-.logo{
-  width:40px;
-  height:auto;
-  position: relative;;
-  top:25%;
+.logo {
+  width: 40px;
+  height: auto;
+  position: relative;
+  top: 25%;
 }
 
-h1{cursor: default;}
-
-.navElement{
-  color:black;
+h1 {
+  cursor: default;
 }
 
-input.submitButton{
+.navElement {
+  color: black;
+}
+
+input.submitButton {
   border-radius: 3px 3px 3px 3px;
   -moz-border-radius: 3px 3px 3px 3px;
   -webkit-border-radius: 3px 3px 3px 3px;
@@ -103,23 +141,25 @@ input.submitButton{
   margin-top: 20px;
   border: solid white 2px;
   color: white;
-  padding:10px;
+  padding: 10px;
   cursor: pointer;
   outline: none;
 }
 
-input.submitButton:hover{
+input.submitButton:hover {
   border: solid 2px transparent;
   background-color: #394140;
   transition: ease 200ms;
 }
 
-.fade-enter, .fade-leave-to{
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
-  transform:translateX(-2em);
+  transform: translateX(-2em);
 }
 
-.fade-enter-active, .fade-leave-active{
-  transition:all 800ms ease;
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 800ms ease;
 }
 </style>
