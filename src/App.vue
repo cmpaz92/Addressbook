@@ -1,35 +1,31 @@
 <template>
   <div id="app">
-    <div class="headerHeader">
-      <!-- <img class="logo" src="./assets/logo.png"> -->
-      <span>Addressio</span>
-      <div>
-        <router-link to="/">
-          <p class="navElement">Home</p>
-        </router-link>
-        <router-link v-if="this.$user != null" to="/contacts">
+    <div id="nav">
+      <router-link to="/">
+        <p class="navElement">Home</p>
+      </router-link>
+      <span v-if="isLoggedIn">
+        <router-link to="/contacts">
           <p class="navElement">Contacts</p>
         </router-link>
-        <router-link v-if="this.$user != null" to="/mySocial">
+        <router-link to="/mySocial">
           <p class="navElement">My Socials</p>
         </router-link>
-        <router-link v-if="this.$user != null" to="/search">
+        <router-link to="/search">
           <p class="navElement">Search</p>
         </router-link>
-        <router-link v-if="this.$user == null" to="/signUp">
-          <p class="navElement">Sign Up</p>
-        </router-link>
-        <router-link v-if="this.$user == null" to="/login">
-          <p class="navElement">Login</p>
-        </router-link>
-        <div v-if="this.$user != null" @click.prevent="logOut">
-          <p class="navElement">Logout</p>
-        </div>
-      </div>
+      </span>
+      <router-link to="/signUp">
+        <p class="navElement">Sign Up</p>
+      </router-link>
+      <router-link to="/login">
+        <p class="navElement">Login</p>
+      </router-link>
+      <span v-if="isLoggedIn">
+        <a @click="logout">Logout</a>
+      </span>
     </div>
-    <transition name="fade" mode="out-in">
-      <router-view></router-view>
-    </transition>
+      <router-view />
   </div>
 </template>
 
@@ -37,24 +33,30 @@
 export default {
   name: "App",
   data() {
-     return {
-     }
+    return {
+
+    };
   },
   computed: {
-    loggedIn() {
-      return localStorage.getItem("user");
+    isLoggedIn: function() {
+      return this.$store.getters.isLoggedIn;
     }
+  },
+  created: function() {
+    this.$http.interceptors.response.use(undefined, function(err) {
+      return new Promise(function(/*resolve, reject*/) {
+        if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
+          this.$store.dispatch(this.logout);
+        }
+        throw err;
+      });
+    });
   },
   methods: {
-  created() {
-    if (this.loggedIn) {
-      this.$router.push('/');
-    }
-  },
-  logOut() {
-      localStorage.removeItem("user");
-      this.$user = null;
-      this.$router.push("/logout");
+    logout: function() {
+      this.$store.dispatch("logout").then(() => {
+        this.$router.push("/login");
+      });
     }
   }
 };

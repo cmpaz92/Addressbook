@@ -9,7 +9,7 @@
         <ul>
           <li v-for="error in errors" v-bind:key="error.id">{{ error }}</li>
         </ul>
-        <form id="loginForm" @submit="checkForm">
+        <form id="loginForm" @submit.prevent="checkForm">
           <p>
             <label for="email">Email</label>
             <input type="email" name="email" id="email" v-model="email" />
@@ -30,21 +30,24 @@
 </template>
 
 <script>
-export default {
-  name: "Login",
-  computed: {
-    loggedIn() {
-      return localStorage.getItem("user");
-    }
+
+  export default {
+   data: function() {
+    return {
+      errors: [],
+      email: null,
+      password: null
+    };
   },
-  created() {
-    if (this.loggedIn) {
-      this.user = localStorage.getItem("user");
-      this.$router.push("/");
-    }
-  },
-  methods: {
-    checkForm: function(e) {
+    methods: {
+      login: function () {
+        let email = this.email 
+        let password = this.password
+        this.$store.dispatch('login', { email, password })
+       .then(() => this.$router.push('/profile'))
+       .catch(err => console.log(err))
+      },
+      checkForm: function(e) {
       if (this.email && this.password) {
         this.login();
       }
@@ -58,39 +61,8 @@ export default {
       }
       e.preventDefault();
     },
-    login: function() {
-      this.$http
-        .post(this.$api+"/user/login", {
-       //.post("http://localhost:4000/user/login", {
-          email: this.email,
-          password: this.password
-        })
-        .then(response => {
-          
-          if (response.data.token) {
-            console.log(response.data.user._id);
-            localStorage.setItem("user", response.data.token);
-            localStorage.setItem("id", response.data.user._id);
-            this.$user = localStorage.getItem("user");
-            this.$id = localStorage.getItem("id");
-            this.$router.push("/mysocial");
-          }
-        })
-        .catch(function(error) {
-          console.log(error);
-          this.errors.push("incorrect Credentials.");
-        });
     }
-  },
-  data: function() {
-    return {
-      errors: [],
-      email: null,
-      password: null
-    };
-  },
-  mounted() {}
-};
+  }
 </script>
 
 <style>

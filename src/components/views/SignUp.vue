@@ -36,12 +36,19 @@
 <script>
 export default {
   name: "Signup",
-
+  data: function() {
+    return {
+      errors: [],
+      username: null,
+      email: null,
+      password: null,
+    };
+  },
   methods: {
     checkForm: function(e) {
       if (this.username && this.email && this.password) {
         this.signup();
-        this.$router.push("/contacts");
+        this.$router.push("/profile");
       }
       this.errors = [];
 
@@ -56,36 +63,18 @@ export default {
       }
       e.preventDefault();
     },
+
     signup: function() {
-      this.$http
-        .post(this.$api+"/user/signup", {
-        //.post("http://localhost:4000/user/signup", {
-          username: this.username,
-          email: this.email,
-          password: this.password
-        })
-        .then(function(response) {
-          if (response.data.token) {
-            localStorage.setItem("user", JSON.stringify(response.data.token));
-            localStorage.setItem("id", JSON.stringify(response.data.user.id));
-            this.user = localStorage.getItem("user");
-            this.id = localStorage.getItem("id");
-          }
-        })
-        .catch(function(error) {
-          console.log(error);
-          this.errors.push("incorrect Credentials.");
-        });
+      let data = {
+        username: this.username,
+        email: this.email,
+        password: this.password,
+      };
+      this.$store
+        .dispatch("signup", data)
+        .then(() => this.$router.push("/profile"))
+        .catch(err => console.log(err));
     }
-  },
-  data: function() {
-    return {
-      errors: [],
-      username: null,
-      email: null,
-      password: null,
-      id: null
-    };
   },
   mounted() {}
 };
