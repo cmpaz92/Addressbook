@@ -5,16 +5,17 @@ const jwt = require("jsonwebtoken");
 const router = express.Router();
 const auth = require("../controller/userController");
 
+const mongoose = require("mongoose");
 const User = require("../model/User");
 const Friend = require("../model/Friend");
 
 
 
-router.use(function(req, res, next) {
+/*router.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "https://priceless-panini-34c7e3.netlify.app"); // update to match the domain you will make the request from
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
-});
+});*/
 
 /**
  * @method - POST
@@ -81,7 +82,7 @@ router.post(
         (err, token) => {
           if (err) throw err;
           res.status(200).json({
-            token
+            token, user
           });
         }
       );
@@ -160,7 +161,6 @@ router.post(
  * @description - Get User
  * @param - /%userID
  */
-
 router.get("/:id", auth, async (req, res) => {
   try {
     // request.user is getting fetched from Middleware after token authentication
@@ -246,6 +246,26 @@ router.post("/friend/:userID", auth, async (req, res) => {
     console.log(e);
   }
 });
+
+User.aggregate([
+  { "$lookup": {
+    "from": Friend.collection.name,
+    "let": { "friends": "$friends" },
+    "pipeline": [
+      { "$match": {
+        "recipient": mongoose.Types.ObjectId("5afaab572c4ec049aeb0bcba"),
+        "$expr": { "$in": [ "$_id", "$$friends" ] }
+      }},
+      { "$project": { "status": 1 } }
+    ],
+    "as": "friends"
+  }},
+  { "$addFields": {
+    "friendsStatus": {
+      "$ifNull": [ { "$min": "$friends.status" }, 0 ]
+    }
+  }}
+]);
  
 
 module.exports = router;
