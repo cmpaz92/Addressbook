@@ -19,7 +19,10 @@
     <transition name="fade" mode="out-in">
       <div class="content" v-if="list">
         <ul>
-          <li v-for="item in list" :key="item._id">{{ item.username }}</li>
+          <li v-for="item in list" :key="item._id">
+            {{ item.username }}
+            <button v-on:click="addfriend(item._id)">Add Friend</button>
+          </li>
         </ul>
       </div>
     </transition>
@@ -30,6 +33,8 @@
 </template>
 
 <script>
+let api = "http://localhost:4000";
+//let api = "https://addresio.herokuapp.com";
 export default {
   name: "Search",
   computed: {
@@ -53,29 +58,31 @@ export default {
       this.$http
         //.post("https://addresio.herokuapp.com/user/login", {
         .post(
-          this.$api+"/user/search",
+          api + "/user/search",
           { username: this.input },
-          { headers: { token: localStorage.getItem("user") } }
+          {
+            headers: { token: this.$store.getters.token }
+          }
         )
         .then(response => (this.list = response.data))
         .catch(function(error) {
           console.log(error);
         });
-        console.log(this.list);
+      console.log(this.list);
     },
-        addfriend: function() {
+    addfriend: function(f_id) {
+      console.log(f_id);
       this.$http
-        //.post("https://addresio.herokuapp.com/user/login", {
         .post(
-          this.$api+"/user/search",
-          { username: this.input },
-          { headers: { token: localStorage.getItem("user") } }
+          api + "/user/friend/" + f_id,
+          { id: this.$store.getters.userID },
+          { headers: { token: this.$store.getters.token } }
         )
-        .then(response => (this.list = response.data))
+        .then(response => console.log(response))
         .catch(function(error) {
           console.log(error);
         });
-        console.log(this.list);
+      console.log(this.list);
     }
   },
   data: function() {

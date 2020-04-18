@@ -3,16 +3,13 @@
     <div class="container">
       <div class="left">
         <div class="header">
-          <h1>my Social</h1>
+          <h1>My Information</h1>
         </div>
         <div class="contactContainer">
-          <div class="contactNames">
-            <ul>
-              <ul id="example-1">
-                <li v-for="item in this.items" :key="item.username">{{ item.username }}{{ item.email}}</li>
-              </ul>
-            </ul>
-          </div>
+          <form class="Details" v-if="items">      
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" v-model="email" v-bind="items.data.email" />        
+          </form>
         </div>
       </div>
       <div class="right">
@@ -34,14 +31,17 @@
 </template>
 
 <script>
+let api = "http://localhost:4000";
+//let api = "https://addresio.herokuapp.com";
 export default {
   name: "MySocial",
   methods: {
     getuser: function() {
+      console.log(this.$store.getters.userID);
         this.$http
         //.post("https://addresio.herokuapp.com/user/signup", {
-        .get(this.api+"/user/" + localStorage.getItem("id"), {
-          headers: { token: localStorage.getItem("user") }
+        .get(api+"/user/" + this.$store.getters.userID, {
+          headers: { token: this.$store.getters.token }
         })
          .then(response => (this.items = response))
         .catch(function(error) {
@@ -64,7 +64,8 @@ export default {
   },
   data: function() {
     return {
-      items: null
+      items: null,
+      email: null
     };
   },
   mounted() {
