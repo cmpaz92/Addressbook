@@ -16,7 +16,12 @@
           </p>
           <p>
             <label for="password">Password</label>
-            <input type="password" name="password" id="password" v-model="password" />
+            <input
+              type="password"
+              name="password"
+              id="password"
+              v-model="password"
+            />
           </p>
           <input class="submitButton" type="submit" value="Let's Go!" />
         </form>
@@ -30,24 +35,24 @@
 </template>
 
 <script>
-
-  export default {
-   data: function() {
+export default {
+  data: function() {
     return {
       errors: [],
       email: null,
-      password: null
+      password: null,
     };
   },
-    methods: {
-      login: function () {
-        let email = this.email 
-        let password = this.password
-        this.$store.dispatch('login', { email, password })
-       .then(() => this.$router.push('/profile'))
-       .catch(err => console.log(err))
-      },
-      checkForm: function(e) {
+  methods: {
+    login: function() {
+      let email = this.email;
+      let password = this.password;
+      this.$store
+        .dispatch("login", { email, password })
+        .then(() => this.$router.push("/profile"))
+        .catch((err) => console.log(err));
+    },
+    checkForm: function(e) {
       if (this.email && this.password) {
         this.login();
       }
@@ -61,9 +66,9 @@
       }
       e.preventDefault();
     },
-    }
-  }
+  },
+  mounted() {},
+};
 </script>
 
-<style>
-</style>
+<style></style>
