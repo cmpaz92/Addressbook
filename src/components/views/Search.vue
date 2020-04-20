@@ -62,7 +62,6 @@ export default {
       e.preventDefault();
     },
     search: function() {
-      console.log(this.$store.getters.token);
       this.$http
         .post(
           this.$api + "/user/search",
@@ -75,10 +74,8 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
-      console.log(this.list);
     },
     addfriend: function(f_id) {
-      console.log(f_id);
       this.$http
         .post(
           this.$api + "/user/friend/" + f_id,
@@ -90,7 +87,6 @@ export default {
           console.log(error);
            this.status = "error";
         });
-      console.log(this.list);
     }
   },
   data: function() {

@@ -59,7 +59,6 @@ export default {
   name: "Profile",
   methods: {
     getuser: function() {
-      console.log(this.$store.getters.userID);
       this.$http
         .get(this.$api + "/user/" + this.$store.getters.userID, {
           headers: { token: this.$store.getters.token }
@@ -71,7 +70,6 @@ export default {
           this.twitter = this.items.data.socialmedia.twitter;
           this.instagram = this.items.data.socialmedia.instagram;
           this.youtube = this.items.data.socialmedia.youtube;
-          console.log(this.items.data.socialmedia.facebook);
         })
         .catch(function(error) {
           console.log(error);
