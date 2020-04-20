@@ -61,7 +61,6 @@ export default {
   name: "Contacts",
   methods: {
     getlist: function() {
-      console.log(this.$store.getters.userID);
       this.$http
         .get(this.$api + "/user/" + this.$store.getters.userID, {
           headers: { token: this.$store.getters.token }
@@ -79,7 +78,6 @@ export default {
       let users = [];
       let promises = [];
       for (let i = 0; i < this.friendsID.length; i++) {
-        console.log(this.friendsID[i]);
         promises.push(
           this.$http
             .get(this.$api + "/user/" + this.friendsID[i], {
