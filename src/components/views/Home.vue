@@ -48,6 +48,11 @@ export default {
     -webkit-border-radius: 8px 8px 8px 8px;
     margin-top:40px;
   }
+  .errors {
+    color: white;
+    background-color: red;
+    padding: 3px;
+  }
 
   h1{
     color:white;

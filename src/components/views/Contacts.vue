@@ -5,59 +5,32 @@
         <div class="header">
           <h1>My Contacts</h1>
         </div>
-        <div class="contactContainer">
-          <div class="contactNames">
+        <div class>
+          <div class="content-friends" v-if="friends.length">
             <ul>
-              <li className="contactElement">Daniel Schneider:</li>
-              <li className="contactElement">Daniel Schneider:</li>
-              <li className="contactElement">Daniel Schneider:</li>
-            </ul>
-          </div>
-          <div class="contactSocial">
-            <ul>
-              <li className="contactElement">
-                <a href="https://www.facebook.com/"><span> Facebook </span></a>|
-                <a href="https://twitter.com/explore"><span> Twitter </span></a
-                >|
-                <a href="https://www.instagram.com/"><span> Instagram </span></a
-                >|
-                <a href="https://www.youtube.com/"><span> Youtube </span></a>
-              </li>
-              <li className="contactElement">
-                <a href="https://www.facebook.com/"><span> Facebook </span></a>|
-                <a href="https://twitter.com/explore"><span> Twitter </span></a
-                >|
-                <a href="https://www.instagram.com/"><span> Instagram </span></a
-                >|
-                <a href="https://www.youtube.com/"><span> Youtube </span></a>
-              </li>
-              <li className="contactElement">
-                <a href="https://www.facebook.com/"><span> Facebook </span></a>|
-                <a href="https://twitter.com/explore"><span> Twitter </span></a
-                >|
-                <a href="https://www.instagram.com/"><span> Instagram </span></a
-                >|
-                <a href="https://www.youtube.com/"><span> Youtube </span></a>
-              </li>
+              <li
+                v-for="friend in friends"
+                v-on:click="show(friend.data.id)"
+                :key="friend.data.id"
+              >{{ friend.data.username }}</li>
             </ul>
           </div>
         </div>
       </div>
       <div class="right">
         <div class="header">
-          <h1>Add New</h1>
+          <h1>Contact Info</h1>
+          <ul>
+            <ul>
+              <li
+                v-for="friend in friends"
+                v-on:click="show(friend.data.id)"
+                :key="friend.data.id"
+              >{{ friend.data.s }}</li>
+            </ul>
+          </ul>
         </div>
-        <div>
-          <form class="contactForm">
-            <input type="text" placeholder="First Name" />
-            <input type="text" placeholder="Last Name" />
-            <input type="text" placeholder="Facebook" />
-            <input type="text" placeholder="Twitter" />
-            <input type="text" placeholder="Instagram" />
-            <input type="text" placeholder="Youtube" />
-            <input class="submitButton" type="submit" value="Add" />
-          </form>
-        </div>
+        <div></div>
       </div>
     </div>
   </div>
@@ -66,11 +39,54 @@
 <script>
 export default {
   name: "Contacts",
-  methods: {},
-  mounted() {},
-  data() {
-    return {};
+  methods: {
+    getlist: function() {
+      console.log(this.$store.getters.userID);
+      this.$http
+        .get(this.$api + "/user/" + this.$store.getters.userID, {
+          headers: { token: this.$store.getters.token }
+        })
+        .then(response => {
+          this.friendsID = response.data.friends;
+          this.getfriend();
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    getfriend: function() {
+      let users = [];
+      let promises = [];
+      for (let i = 0; i < this.friendsID.length; i++) {
+        promises.push(
+          this.$http
+            .get(this.$api + "/user/" + this.friendsID[i], {
+              headers: { token: this.$store.getters.token }
+            })
+            .then(response => {
+              // do something with response
+              this.friends.push(response);
+            })
+        );
+      }
+
+      Promise.all(promises).then(() => console.log(users));
+    },
+    show: function(f) {
+      console.log(f);
+    }
   },
+  mounted() {
+    this.getlist();
+  },
+  created() {},
+  data() {
+    return {
+      friendsID: [],
+      friends: [],
+      currentuser: null
+    };
+  }
 };
 </script>
 
@@ -86,6 +102,7 @@ export default {
   margin-top: 40px;
   display: flex;
   width: 80%;
+  min-height: 400px;
   color: white;
   overflow: auto;
 }
@@ -142,5 +159,20 @@ export default {
   display: flex;
   flex-direction: column;
   color: white;
+}
+li {
+  background: #333;
+  color: white;
+  padding: 8px 0;
+  margin: 0;
+  cursor: pointer;
+}
+li:nth-child(odd) {
+  background: #444;
+  color: white;
+}
+li:hover {
+  background: #999 !important;
+  color: #333 !important;
 }
 </style>

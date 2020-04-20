@@ -11,7 +11,7 @@ export default new Vuex.Store({
         status: '',
         token: localStorage.getItem('token') || '',
         user: {},
-        id: null
+        uid: null,
     },
     mutations: {
         auth_request(state) {
@@ -20,10 +20,8 @@ export default new Vuex.Store({
         auth_success(state, { token, user }) {
             state.status = 'success'
             state.token = token
-            console.log(user._id);
-            state.id = user._id;
+            state.uid = user._id;
             state.user = user
-            console.log(state.token);
         },
         auth_error(state) {
             state.status = 'error'
@@ -42,6 +40,7 @@ export default new Vuex.Store({
                         const token = resp.data.token
                         const user = resp.data.user
                         localStorage.setItem('token', token)
+                        console.log(user);
                         axios.defaults.headers.common['Authorization'] = token
                         commit('auth_success', { token, user })
                         resolve(resp)
@@ -49,7 +48,7 @@ export default new Vuex.Store({
                     .catch(err => {
                         commit('auth_error')
                         localStorage.removeItem('token')
-                        reject(err)
+                        reject(err.response)
                     })
             })
         },
@@ -68,7 +67,7 @@ export default new Vuex.Store({
                     .catch(err => {
                         commit('auth_error', err)
                         localStorage.removeItem('token')
-                        reject(err)
+                        reject(err.response)
                     })
             })
         },
@@ -79,11 +78,30 @@ export default new Vuex.Store({
                 delete axios.defaults.headers.common['Authorization']
                 resolve()
             })
-        }
+        },
+       /* update({ commit }, user) {
+            return new Promise((resolve, reject) => {
+                commit('auth_request')
+                axios({ url: api + "/user/login", data: user, method: 'POST' })
+                    .then(resp => {
+                        const token = resp.data.token
+                        const user = resp.data.user
+                        localStorage.setItem('token', token)
+                        axios.defaults.headers.common['Authorization'] = token
+                        commit('auth_success', { token, user })
+                        resolve(resp)
+                    })
+                    .catch(err => {
+                        commit('auth_error')
+                        localStorage.removeItem('token')
+                        reject(err)
+                    })
+            })
+        },*/
     },
     getters: {
         isLoggedIn: state => !!state.token,
-        userID: state => state.id,
+        userID: state => state.uid,
         authStatus: state => state.status,
         token: state => state.token,
     },

@@ -3,12 +3,14 @@
     <div class="content">
       <h1>Login</h1>
       <div>
-        <p v-if="errors.length">
+        <div v-if="errors.length" class="errors">
+        <p >
           <b>Please correct the following error(s):</b>
         </p>
-        <ul>
-          <li v-for="error in errors" v-bind:key="error.id">{{ error }}</li>
+        <ul >
+          <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
         </ul>
+        </div>
         <form id="loginForm" @submit.prevent="checkForm">
           <p>
             <label for="email">Email</label>
@@ -50,7 +52,9 @@ export default {
       this.$store
         .dispatch("login", { email, password })
         .then(() => this.$router.push("/profile"))
-        .catch((err) => console.log(err));
+        .catch(err => {
+          err.data.errors ? this.errors.push(err.data.errors["0"].msg) : this.errors.push(err.data.message);
+        });
     },
     checkForm: function(e) {
       if (this.email && this.password) {
@@ -65,9 +69,8 @@ export default {
         this.errors.push("Password required.");
       }
       e.preventDefault();
-    },
-  },
-  mounted() {},
+    }
+  }
 };
 </script>
 
