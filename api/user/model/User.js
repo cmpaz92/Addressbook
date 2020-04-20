@@ -18,8 +18,20 @@ const UserSchema = mongoose.Schema({
     type: Date,
     default: Date.now()
   },
+  socialmedia: {
+    facebook: {
+    type: String,
+    required: true
+  },
+    instagram: {
+    type: String,
+    required: true
+  },
+},
   friends: [{ type: Schema.Types.ObjectId, ref: 'Friend'}]
 });
+
+
 
 // export model user with UserSchema
 module.exports = mongoose.model("user", UserSchema);

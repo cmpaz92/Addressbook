@@ -8,7 +8,7 @@ const auth = require("../controller/userController");
 const mongoose = require("mongoose");
 const User = require("../model/User");
 const Friend = require("../model/Friend");
-
+mongoose.set('useFindAndModify', false);
 
 
 /*router.use(function(req, res, next) {
@@ -23,16 +23,16 @@ const Friend = require("../model/Friend");
  * @description - User SignUp
  */
 
-router.post(
+ router.post(
   "/signup",
   [
-    check("username", "Please Enter a Valid Username")
-      .not()
-      .isEmpty(),
-    check("email", "Please enter a valid email").isEmail(),
-    check("password", "Please enter a valid password").isLength({
-      min: 6
-    })
+  check("username", "Please Enter a Valid Username")
+  .not()
+  .isEmpty(),
+  check("email", "Please enter a valid email").isEmail(),
+  check("password", "Please enter a valid password").isLength({
+    min: 6
+  })
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -47,6 +47,7 @@ router.post(
       email,
       password
     } = req.body;
+
     try {
       let user = await User.findOne({
         email
@@ -60,7 +61,7 @@ router.post(
       user = new User({
         username,
         email,
-        password
+        password,
       });
 
       const salt = await bcrypt.genSalt(10);
@@ -76,30 +77,31 @@ router.post(
 
       jwt.sign(
         payload,
-        "randomString", {
-        expiresIn: 10000
-      },
+        "secret",
+        {
+          expiresIn: 3600
+        },
         (err, token) => {
           if (err) throw err;
           res.status(200).json({
             token, user
           });
         }
-      );
+        );
     } catch (err) {
       console.log(err.message);
       res.status(500).send("Error in Saving");
     }
   }
-);
+  );
 
-router.post(
+ router.post(
   "/login",
   [
-    check("email", "Please enter a valid email").isEmail(),
-    check("password", "Please enter a valid password").isLength({
-      min: 6
-    })
+  check("email", "Please enter a valid email").isEmail(),
+  check("password", "Please enter a valid password").isLength({
+    min: 6
+  })
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -145,7 +147,7 @@ router.post(
             token, user
           });
         }
-      );
+        );
     } catch (e) {
       console.error(e);
       res.status(500).json({
@@ -153,7 +155,36 @@ router.post(
       });
     }
   }
-);
+  );
+
+
+
+
+
+ router.post("/update/:id", auth, async (req, res) => {
+  try {
+   if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+    var userid = req.params.id;
+
+    var fb = req.body.fb;
+    var ig = req.body.fig;
+       console.log(req.body);
+    //const user = await User.findOneAndUpdate({ _id: userid },{ $unset: { socialmedia: "" } },{ $push: { socialmedia: sm }});
+        const user = await User.findOneAndUpdate(
+      { _id: userid },{ "$set":  { "socialmedia.facebook": fb , "socialmedia.instagram": ig }}
+      )
+    res.json(user);
+
+  } else {
+    res.send({ message: "User ID incorrect" });
+  }
+} catch (e) {
+  res.send({ message: "Error in Fetching users" });
+  console.log(e);
+}
+
+
+});
 
 
 /**
@@ -161,29 +192,59 @@ router.post(
  * @description - Get User
  * @param - /%userID
  */
-router.get("/:id", auth, async (req, res) => {
+ router.get("/:id", auth, async (req, res) => {
   try {
     // request.user is getting fetched from Middleware after token authentication
     if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-      const user = await User.findById(req.params.id);
-      console.log(req.user.id);
-      console.log(req.params.id);
-      if (req.user.id == req.params.id) {
-        res.json(user);
-      } else {
-        var x = {
-          username: user.username,
-          email: user.email
-        };
-        res.json(x);
-      }
-    } else {
-      res.send({ message: "User ID incorrect" });
+      //const userid = await Friend.findById(req.params.id);
+      const user= await User.findById(req.params.id);
+
+/*let friends = User.aggregate([
+  { "$lookup": {
+    "from": Friend.collection.name,
+    "let": { "friends": "$friends" },
+    "pipeline": [
+      { "$match": { 
+        "recipient": mongoose.Types.ObjectId(req.user.id),
+        "$expr": { "$in": [ "$_id", "$$friends" ] }
+      }},
+      { "$project": { "status": 1 } }
+    ],
+    "as": "friends"
+  }},
+  { "$addFields": {
+    "friendsStatus": {
+      "$ifNull": [ { "$min": "$friends.status" }, 0 ]
     }
-  } catch (e) {
-    res.send({ message: "Error in Fetching user" });
-    console.log(e);
-  }
+  }}
+]).exec((err, locations) => {
+    if (err) throw err;
+    console.log(locations);
+});
+console.log(friends);*/
+
+
+if (req.user.id == req.params.id) {
+  res.json(user);
+} else {
+  console.log(user);
+  var x = {
+    "id": user.id,
+    "username": user.username,
+    "email": user.email,
+    "social": user.socialmedia
+  };
+  console.log(user.socialMedia);
+  console.log(x);
+  res.json(x);
+}
+} else {
+  res.send({ message: "User ID incorrect" });
+}
+} catch (e) {
+  res.send({ message: "Error in Fetching user" });
+  console.log(e);
+}
 });
 
 
@@ -193,7 +254,7 @@ router.get("/:id", auth, async (req, res) => {
  * @param - /search
  */
 
-router.post("/search", auth, async (req, res) => {
+ router.post("/search", auth, async (req, res) => {
   try {
     var searchfriend = req.body.username;
     const user = await User.find({ username: { $regex: '.*' + searchfriend + '.*' } }, function (err, result) { });
@@ -209,16 +270,16 @@ router.post("/search", auth, async (req, res) => {
  * @description - Friend Request
  * @param - /friend/%userID
  */
-router.post("/friend/:userID", auth, async (req, res) => {
+ router.post("/friend/:userID", auth, async (req, res) => {
   try {
     //if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-    var friendrecipient = req.params.userID;
- var friendrequester = req.body.id;
- if(friendrequester == friendrecipient){
- res.send({ message: "Can't request yourself" });
- }else{
+      var friendrecipient = req.params.userID;
+      var friendrequester = req.body.id;
+      if(friendrequester == friendrecipient){
+       res.send({ message: "Can't request yourself" });
+     }else{
 
-    const docA = await Friend.findOneAndUpdate(
+   /* const docA = await Friend.findOneAndUpdate(
         { requester: friendrequester, recipient: friendrecipient },
         { $set: { status: 1 }},
         { upsert: true, new: true }
@@ -229,34 +290,64 @@ router.post("/friend/:userID", auth, async (req, res) => {
         { $set: { status: 2 }},
         { upsert: true, new: true }
     )
-    console.log(docB);
+    console.log(docB);*/
     const updateUserA = await User.findOneAndUpdate(
-        { _id: friendrequester },
-        { $push: { friends: docA._id }}
-    )
+      { _id: friendrequester },
+      { $push: { friends: friendrecipient }}
+      )
     const updateUserB = await User.findOneAndUpdate(
-        { _id: friendrecipient },
-        { $push: { friends: docB._id }}
-    )
+      { _id: friendrecipient },
+      { $push: { friends: friendrequester }}
+      )
     res.send({ message: "Request sent" });
   }
  // }
-  } catch (e) {
-    res.send({ message: "Error in Sending Request" });
-    console.log(e);
-  }
+} catch (e) {
+  res.send({ message: "Error in Sending Request" });
+  console.log(e);
+}
 });
 
-User.aggregate([
+ router.post("/friend/:userID/:accept", auth, async (req, res) => {
+/*
+    if(accept == "accept"){
+Friend.findOneAndUpdate(
+        { requester: UserA, recipient: UserB },
+        { $set: { status: 3 }}
+    )
+    Friend.findOneAndUpdate(
+        { recipient: UserA requester: UserB },
+        { $set: { status: 3 }}
+    )
+  }else if(accept == "deny"){
+     const docA = await Friend.findOneAndRemove(
+        { requester: UserA, recipient: UserB }
+    )
+    const docB = await Friend.findOneAndRemove(
+        { recipient: UserA, requester: UserB }
+    )
+    const updateUserA = await User.findOneAndUpdate(
+        { _id: UserA },
+        { $pull: { friends: docA._id }}
+    )
+    const updateUserB = await User.findOneAndUpdate(
+        { _id: UserB },
+        { $pull: { friends: docB._id }}
+    )
+
+  }*/
+});
+
+ User.aggregate([
   { "$lookup": {
     "from": Friend.collection.name,
     "let": { "friends": "$friends" },
     "pipeline": [
-      { "$match": {
-        "recipient": mongoose.Types.ObjectId("5afaab572c4ec049aeb0bcba"),
-        "$expr": { "$in": [ "$_id", "$$friends" ] }
-      }},
-      { "$project": { "status": 1 } }
+    { "$match": {
+      "recipient": mongoose.Types.ObjectId("5afaab572c4ec049aeb0bcba"),
+      "$expr": { "$in": [ "$_id", "$$friends" ] }
+    }},
+    { "$project": { "status": 1 } }
     ],
     "as": "friends"
   }},
@@ -265,7 +356,7 @@ User.aggregate([
       "$ifNull": [ { "$min": "$friends.status" }, 0 ]
     }
   }}
-]);
+  ]);
  
 
-module.exports = router;
+ module.exports = router;
