@@ -8,19 +8,21 @@
         <router-link to="/contacts">
           <p class="navElement">Contacts</p>
         </router-link>
-        <router-link to="/mySocial">
-          <p class="navElement">My Socials</p>
+        <router-link to="/profile">
+          <p class="navElement">Profile</p>
         </router-link>
         <router-link to="/search">
           <p class="navElement">Search</p>
         </router-link>
       </span>
+      <span v-if="!isLoggedIn">
       <router-link to="/signUp">
         <p class="navElement">Sign Up</p>
       </router-link>
       <router-link to="/login">
         <p class="navElement">Login</p>
       </router-link>
+      </span>
       <span v-if="isLoggedIn">
         <a @click="logout">Logout</a>
       </span>

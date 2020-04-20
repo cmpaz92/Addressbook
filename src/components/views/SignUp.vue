@@ -3,12 +3,14 @@
     <div class="content">
       <h1>Sign Up</h1>
       <div>
-        <p v-if="errors.length">
-          <b>Please correct the following error(s):</b>
-        </p>
-        <ul>
-          <li v-for="error in errors" v-bind:key="error.id">{{ error }}</li>
-        </ul>
+        <div v-if="errors.length" class="errors">
+          <p>
+            <b>Please correct the following error(s):</b>
+          </p>
+          <ul>
+            <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
+          </ul>
+        </div>
         <form id="signupForm" @submit="checkForm">
           <p>
             <label for="username">Username</label>
@@ -41,14 +43,13 @@ export default {
       errors: [],
       username: null,
       email: null,
-      password: null,
+      password: null
     };
   },
   methods: {
     checkForm: function(e) {
       if (this.username && this.email && this.password) {
         this.signup();
-        this.$router.push("/profile");
       }
       this.errors = [];
 
@@ -68,12 +69,16 @@ export default {
       let data = {
         username: this.username,
         email: this.email,
-        password: this.password,
+        password: this.password
       };
       this.$store
-        .dispatch("signup", data)
+        .dispatch("register", data)
         .then(() => this.$router.push("/profile"))
-        .catch(err => console.log(err));
+        .catch(err => {
+          err.data.errors
+            ? this.errors.push(err.data.errors["0"].msg)
+            : this.errors.push(err.data.message);
+        });
     }
   },
   mounted() {}

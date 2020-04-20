@@ -33,8 +33,7 @@
 </template>
 
 <script>
-let api = "http://localhost:4000";
-//let api = "https://addresio.herokuapp.com";
+
 export default {
   name: "Search",
   computed: {
@@ -55,10 +54,11 @@ export default {
       e.preventDefault();
     },
     search: function() {
+      console.log(this.$store.getters.token);
       this.$http
         //.post("https://addresio.herokuapp.com/user/login", {
         .post(
-          api + "/user/search",
+          this.$api + "/user/search",
           { username: this.input },
           {
             headers: { token: this.$store.getters.token }
@@ -74,7 +74,7 @@ export default {
       console.log(f_id);
       this.$http
         .post(
-          api + "/user/friend/" + f_id,
+          this.$api + "/user/friend/" + f_id,
           { id: this.$store.getters.userID },
           { headers: { token: this.$store.getters.token } }
         )
