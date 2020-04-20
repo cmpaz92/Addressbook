@@ -17,11 +17,33 @@
         </div>
         <div>
           <form id="socialnetworks" @submit.prevent="update" class="contactForm">
-            <input v-model="phone" type="tel" placeholder="Phone" name="Phone" />
-            <input v-model="facebook" type="text" placeholder="Facebook" name="Facebook" />
-            <input v-model="twitter" type="text" placeholder="Twitter" name="Twitter" />
-            <input v-model="instagram" type="text" placeholder="Instagram" name="Instagram" />
-            <input v-model="youtube" type="text" placeholder="Youtube" name="Youtube" />
+            <div class="message true" v-if="status === 'updated'">
+              <p>Updated Social Media</p>
+            </div>
+            <div class="message false" v-if="status === 'error'">
+              <p>Error Updating</p>
+            </div>
+            <label for="phone">Phone</label>
+            <input v-model="phone" id="phone" type="tel" placeholder="phone" name="Phone" />
+            <label for="facebook">Facebook</label>
+            <input
+              v-model="facebook"
+              id="facebook"
+              type="text"
+              placeholder="facebook"
+              name="facebook"
+            />
+            <label for="twitter">Twitter</label>
+            <input v-model="twitter" id="twitter" type="text" placeholder="twitter" name="twitter" />
+            <label for="instagram">Instagram</label>
+            <input
+              v-model="instagram"
+              id="instagram"
+              type="text"
+              placeholder="instagram"
+              name="instagram"
+            />
+            <label for="youtube">Youtube</label>
             <input class="submitButton" type="submit" value="Save!" />
           </form>
         </div>
@@ -42,21 +64,17 @@ export default {
         })
         .then(response => {
           this.items = response;
+          this.phone = this.items.data.socialmedia.phone;
+          this.facebook = this.items.data.socialmedia.facebook;
+          this.twitter = this.items.data.socialmedia.twitter;
+          this.instagram = this.items.data.socialmedia.instagram;
+          this.youtube = this.items.data.socialmedia.youtube;
+          console.log(this.items.data.socialmedia.facebook);
         })
         .catch(function(error) {
           console.log(error);
         });
     },
-    /*getfriend: function(fid) {
-      this.$http
-        .get(this.$api + "/user/" + fid, {
-          headers: { token: this.$store.getters.token }
-        })
-        .then(response => {this.friends.push(response.data.username); console.log(response)})
-        .catch(function(error) {
-          console.log(error);
-        });
-    },*/
     update: function() {
       let data = {
         phone: this.phone,
@@ -65,40 +83,28 @@ export default {
         instagram: this.instagram,
         youtube: this.youtube
       };
-       this.$http
-        .post(this.$api+"/user/update/" + this.$store.getters.userID, 
-         { fb: data.facebook, fig: data.instagram },
-        {
-          headers: { token: this.$store.getters.token }
-        })
-        .then(function(response) {
+      this.$http
+        .post(
+          this.$api + "/user/update/" + this.$store.getters.userID,
+          {
+            fb: data.facebook,
+            ig: data.instagram,
+            ph: data.phone,
+            tw: data.twitter,
+            yt: data.youtube
+          },
+          {
+            headers: { token: this.$store.getters.token }
+          }
+        )
+        .then(response => {
+          this.status = "updated";
           console.log(response);
         })
-        .catch(function(error) {
+        .catch(error => {
+          this.status = "error";
           console.log(error);
         });
-
-      /*  socialMediaHandles: {
-    github: 'vkarpov15',
-    twitter: '@code_barbarian'
-  })*/
-      /*  this.$store
-        .dispatch("login", { formData})
-        .then()
-        .catch(err => console.log(err));
-    }*/
-      /* updateuser: function() {
-      this.$http
-        //.post("https://addresio.herokuapp.com/user/signup", {
-        .get(this.$api+"/user/" + localStorage.getItem("id"), {
-          headers: { token: localStorage.getItem("user") }
-        })
-        .then(function(response) {
-          console.log(response);
-        })
-        .catch(function(error) {
-          console.log(error);
-        });*/
     }
   },
   data: function() {
@@ -110,7 +116,8 @@ export default {
       facebook: null,
       twitter: null,
       instagram: null,
-      youtube: null
+      youtube: null,
+      status: false
     };
   },
   created() {
@@ -120,4 +127,17 @@ export default {
 </script>
 
 <style>
+.message {
+  font-size: 13px;
+  margin: 0;
+  padding: 2px;
+  line-height: 0px;
+}
+.message.true {
+  background-color: green;
+}
+
+.message.error {
+  background-color: red;
+}
 </style>
