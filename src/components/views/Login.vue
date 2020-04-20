@@ -18,7 +18,12 @@
           </p>
           <p>
             <label for="password">Password</label>
-            <input type="password" name="password" id="password" v-model="password" />
+            <input
+              type="password"
+              name="password"
+              id="password"
+              v-model="password"
+            />
           </p>
           <input class="submitButton" type="submit" value="Let's Go!" />
         </form>
@@ -37,7 +42,7 @@ export default {
     return {
       errors: [],
       email: null,
-      password: null
+      password: null,
     };
   },
   methods: {
@@ -69,5 +74,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

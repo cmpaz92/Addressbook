@@ -18,12 +18,15 @@
     </div>
     <transition name="fade" mode="out-in">
       <div class="content" v-if="list">
-        <ul>
-          <li v-for="item in list" :key="item._id">
-            {{ item.username }}
-            <button v-on:click="addfriend(item._id)">Add Friend</button>
-          </li>
-        </ul>
+        <div class="friends">
+          <ul v-for="item in list" :key="item._id">
+            <li class="friendsfriends">
+              <span class="searchItem">{{ item.username}}</span>
+              <span class="searchItem">{{ item.email}}</span>
+              <button class="searchItem" v-on:click="addfriend(item._id)">Add Friend</button>
+            </li>
+          </ul>
+        </div>
       </div>
     </transition>
     <transition name="fade" mode="out-in">
@@ -95,3 +98,26 @@ export default {
   mounted() {}
 };
 </script>
+
+<style>
+.friends {
+  text-align: center;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.friendsfriends {
+  display: flex;
+  justify-content: space-around;
+}
+
+.searchItem {
+  min-width: 100px;
+  text-align: left;
+}
+
+button.searchItem {
+  text-align: center;
+}
+</style>
