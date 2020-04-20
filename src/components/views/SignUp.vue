@@ -12,18 +12,18 @@
           </ul>
         </div>
         <form id="signupForm" @submit="checkForm">
-          <p>
+          <div>
             <label for="username">Username</label>
             <input type="text" name="username" id="username" v-model="username" />
-          </p>
-          <p>
+          </div>
+          <div>
             <label for="email">Email</label>
             <input type="email" name="email" id="email" v-model="email" />
-          </p>
-          <p>
+          </div>
+          <div>
             <label for="password">Password</label>
             <input type="password" name="password" id="password" v-model="password" />
-          </p>
+          </div>
           <input class="submitButton" type="submit" value="Let's Go!" />
         </form>
       </div>

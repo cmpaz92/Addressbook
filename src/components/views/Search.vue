@@ -14,6 +14,12 @@
           </p>
           <input class="submitButton" type="submit" value="Let's Go!" />
         </form>
+        <div class="message true" v-if="status === 'updated'">
+          <p>Friend Added</p>
+        </div>
+        <div class="message false" v-if="status === 'error'">
+          <p>Error</p>
+        </div>
       </div>
     </div>
     <transition name="fade" mode="out-in">
@@ -36,7 +42,6 @@
 </template>
 
 <script>
-
 export default {
   name: "Search",
   computed: {
@@ -80,9 +85,10 @@ export default {
           { id: this.$store.getters.userID },
           { headers: { token: this.$store.getters.token } }
         )
-        .then(response => console.log(response))
+        .then(response => {  this.status = "updated"; console.log(response)})
         .catch(function(error) {
           console.log(error);
+           this.status = "error";
         });
       console.log(this.list);
     }
@@ -91,7 +97,8 @@ export default {
     return {
       errors: [],
       input: null,
-      list: null
+      list: null,
+      status: null
     };
   },
   mounted() {}

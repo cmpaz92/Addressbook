@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="container">
+    <div class="container contact">
       <div class="left">
         <div class="header">
           <h1>My Contacts</h1>
@@ -75,9 +75,11 @@ export default {
         });
     },
     getfriend: function() {
+  
       let users = [];
       let promises = [];
       for (let i = 0; i < this.friendsID.length; i++) {
+        console.log(this.friendsID[i]);
         promises.push(
           this.$http
             .get(this.$api + "/user/" + this.friendsID[i], {
@@ -195,18 +197,18 @@ export default {
   padding-left: 10px;
 }
 
-li {
+.contact li {
   background: #333;
   color: white;
   padding: 8px 0;
   margin: 0;
   cursor: pointer;
 }
-li:nth-child(odd) {
+.contact li:nth-child(odd) {
   background: #444;
   color: white;
 }
-li:hover {
+.contact li:hover {
   background: #999 !important;
   color: #333 !important;
 }

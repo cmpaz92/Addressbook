@@ -1,13 +1,13 @@
 <template>
   <div id="app">
     <div class="container">
-      <div class="left">
+      <div class="left profile">
         <div class="header">
           <h1>Profile</h1>
         </div>
         <div v-if="items">
-          <p>Username: {{ items.data.username }}</p>
-          <p>Email: {{ items.data.email }}</p>
+          <p><span>Username: </span>{{ items.data.username }}</p>
+          <p><span>Email: </span>{{ items.data.email }}</p>
           <p type="email" name="email" id="email"></p>
         </div>
       </div>
@@ -35,6 +35,7 @@
             />
             <label for="twitter">Twitter</label>
             <input v-model="twitter" id="twitter" type="text" placeholder="twitter" name="twitter" />
+
             <label for="instagram">Instagram</label>
             <input
               v-model="instagram"
@@ -44,6 +45,7 @@
               name="instagram"
             />
             <label for="youtube">Youtube</label>
+            <input v-model="youtube" id="yutube" type="text" placeholder="youtube" name="youtube" />
             <input class="submitButton" type="submit" value="Save!" />
           </form>
         </div>
@@ -127,17 +129,5 @@ export default {
 </script>
 
 <style>
-.message {
-  font-size: 13px;
-  margin: 0;
-  padding: 2px;
-  line-height: 0px;
-}
-.message.true {
-  background-color: green;
-}
 
-.message.error {
-  background-color: red;
-}
 </style>
