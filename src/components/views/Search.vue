@@ -59,7 +59,6 @@ export default {
     search: function() {
       console.log(this.$store.getters.token);
       this.$http
-        //.post("https://addresio.herokuapp.com/user/login", {
         .post(
           this.$api + "/user/search",
           { username: this.input },

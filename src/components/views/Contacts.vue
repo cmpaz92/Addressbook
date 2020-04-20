@@ -20,14 +20,34 @@
       <div class="right">
         <div class="header">
           <h1>Contact Info</h1>
+        </div>
+        <div class="userinfo" v-if="currentuser">
+          <h3>{{ currentuser.username}}</h3>
           <ul>
-            <ul>
-              <li
-                v-for="friend in friends"
-                v-on:click="show(friend.data.id)"
-                :key="friend.data.id"
-              >{{ friend.data.s }}</li>
-            </ul>
+            <li>
+              <span>Email:</span>
+              {{ currentuser.email}}
+            </li>
+            <li v-if="currentuser.social.phone">
+              <span>Phone:</span>
+              {{ currentuser.social.phone}}
+            </li>
+            <li v-if="currentuser.social.facebook">
+              <span>Facebook:</span>
+              {{ currentuser.social.facebook}}
+            </li>
+            <li v-if="currentuser.social.instagram">
+              <span>Instagram:</span>
+              {{ currentuser.social.instagram}}
+            </li>
+            <li v-if="currentuser.social.youtube">
+              <span>Youtube:</span>
+              {{ currentuser.social.youtube}}
+            </li>
+            <li  v-if="currentuser.social.twitter">
+              <span>Twitter:</span>
+              {{ currentuser.social.twitter}}
+            </li>
           </ul>
         </div>
         <div></div>
@@ -64,7 +84,6 @@ export default {
               headers: { token: this.$store.getters.token }
             })
             .then(response => {
-              // do something with response
               this.friends.push(response);
             })
         );
@@ -73,6 +92,11 @@ export default {
       Promise.all(promises).then(() => console.log(users));
     },
     show: function(f) {
+      for (let i = 0; i < this.friends.length; i++) {
+        if (this.friends[i].data.id == f) {
+          this.currentuser = this.friends[i].data;
+        }
+      }
       console.log(f);
     }
   },
@@ -160,6 +184,17 @@ export default {
   flex-direction: column;
   color: white;
 }
+
+.userinfo li {
+  height: 15px;
+  cursor: unset;
+}
+
+.userinfo span {
+  float: left;
+  padding-left: 10px;
+}
+
 li {
   background: #333;
   color: white;
