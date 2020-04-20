@@ -1,4 +1,6 @@
-Team: Carlos Paz, Matteo Prock
+Team: 
+
+Carlos Paz, Matteo Prock
 
 Description: 
 
@@ -9,16 +11,17 @@ for a family member or friend you would share your Facebook, Instagram and a per
 
 How to: 
 
-•	Register with username, email and password to get access to the full application. 
-•	Add more information to your profile like phone number and social media channels. 
-•	Search for friends who are also registered with their username (e.g. “helmut123”, “xMatse”). 
-•	Add the person as a friend.
-•	See all your friends and their information in the Contacts page. 
+- Register with username, email and password to get access to the full application. 
+- Add more information to your profile like phone number and social media channels. 
+- Search for friends who are also registered with their username (e.g. “helmut123”, “xMatse”). 
+- Add the person as a friend.
+- See all your friends and their information in the Contacts page. 
 
 Build instructions:
 
 Frontend: Use the "master" branch. Run the application with "npm run serve"
-Backend: Use the "api" branch. Start the server on localhost port 4000 with "npm start" 
+
+Backend: Use the "api" branch. Start the server on localhost port 4000 with "npm start"
 
 Netlify Link:
 
