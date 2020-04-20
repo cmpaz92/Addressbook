@@ -3,7 +3,7 @@
     <div class="content">
       <h1>Login</h1>
       <div>
-        <div v-if="errors.length" class="errors">
+        <div v-if="errors.length" class="alert">
         <p >
           <b>Please correct the following error(s):</b>
         </p>
@@ -12,11 +12,11 @@
         </ul>
         </div>
         <form id="loginForm" @submit.prevent="checkForm">
-          <p>
+          <div>
             <label for="email">Email</label>
             <input type="email" name="email" id="email" v-model="email" />
-          </p>
-          <p>
+          </div>
+          <div>
             <label for="password">Password</label>
             <input
               type="password"
@@ -24,7 +24,7 @@
               id="password"
               v-model="password"
             />
-          </p>
+          </div>
           <input class="submitButton" type="submit" value="Let's Go!" />
         </form>
       </div>
