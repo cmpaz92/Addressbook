@@ -6,8 +6,14 @@
           <h1>Profile</h1>
         </div>
         <div v-if="items">
-          <p><span>Username: </span>{{ items.data.username }}</p>
-          <p><span>Email: </span>{{ items.data.email }}</p>
+          <p>
+            <span>Username:</span>
+            {{ items.data.username }}
+          </p>
+          <p>
+            <span>Email:</span>
+            {{ items.data.email }}
+          </p>
           <p type="email" name="email" id="email"></p>
         </div>
       </div>
@@ -46,6 +52,7 @@
             />
             <label for="youtube">Youtube</label>
             <input v-model="youtube" id="yutube" type="text" placeholder="youtube" name="youtube" />
+            
             <input class="submitButton" type="submit" value="Save!" />
           </form>
         </div>
@@ -60,9 +67,13 @@ export default {
   methods: {
     getuser: function() {
       this.$http
-        .get(this.$api + "/user/" + this.$store.getters.userID, {
-          headers: { token: this.$store.getters.token }
-        })
+        .post(
+          this.$api + "/user/get",
+          { id: this.$store.getters.userID },
+          {
+            headers: { token: this.$store.getters.token }
+          }
+        )
         .then(response => {
           this.items = response;
           this.phone = this.items.data.socialmedia.phone;
@@ -76,27 +87,20 @@ export default {
         });
     },
     update: function() {
-      let data = {
-        phone: this.phone,
-        facebook: this.facebook,
-        twitter: this.twitter,
-        instagram: this.instagram,
-        youtube: this.youtube
+      var data = {
+        id: this.$store.getters.userID,
+        sm: {
+          phone: this.phone,
+          facebook: this.facebook,
+          twitter: this.twitter,
+          instagram: this.instagram,
+          youtube: this.youtube
+        }
       };
       this.$http
-        .post(
-          this.$api + "/user/update/" + this.$store.getters.userID,
-          {
-            fb: data.facebook,
-            ig: data.instagram,
-            ph: data.phone,
-            tw: data.twitter,
-            yt: data.youtube
-          },
-          {
-            headers: { token: this.$store.getters.token }
-          }
-        )
+        .post(this.$api + "/user/update", data, {
+          headers: { token: this.$store.getters.token }
+        })
         .then(response => {
           this.status = "updated";
           console.log(response);
@@ -105,7 +109,16 @@ export default {
           this.status = "error";
           console.log(error);
         });
-    }
+    },
+    addField(){
+      this.applicants.push({
+        previous:'',
+        expiration: ''
+      })
+    },
+    deleteField(counter){
+      this.applicants.splice(counter,1);
+}
   },
   data: function() {
     return {
@@ -127,5 +140,4 @@ export default {
 </script>
 
 <style>
-
 </style>

@@ -14,6 +14,7 @@
           </p>
           <input class="submitButton" type="submit" value="Let's Go!" />
         </form>
+
         <div class="message true" v-if="status === 'updated'">
           <p>Friend Added</p>
         </div>
@@ -74,12 +75,13 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
+        console.log(this.list);
     },
     addfriend: function(f_id) {
       this.$http
         .post(
-          this.$api + "/user/friend/" + f_id,
-          { id: this.$store.getters.userID },
+          this.$api + "/friends/request",
+          { id: this.$store.getters.userID, recid: f_id },
           { headers: { token: this.$store.getters.token } }
         )
         .then(response => {  this.status = "updated"; console.log(response)})

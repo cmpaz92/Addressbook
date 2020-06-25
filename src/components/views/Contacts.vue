@@ -1,18 +1,37 @@
 <template>
   <div id="app">
+        <transition name="fade" mode="out-in" >
+          <div v-if="listfr.length > 0">
+      <div class="content" >
+        <h2>Friend Request</h2>
+        <div class="friends">
+          <ul v-for="item in listfr" :key="item._id">
+            <li class="friendsfriends">
+              <span class="searchItem">{{ item.username}}</span>
+              <button class="submitButton" v-on:click="fresponse(item.frid,1)">Accept</button>
+              <button class="submitButton" v-on:click="fresponse(item.frid,2)">Reject</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      </div>
+    </transition>
     <div class="container contact">
       <div class="left">
         <div class="header">
           <h1>My Contacts</h1>
         </div>
-        <div class>
+        <div>
+          <div v-if="friends.length == 0">
+            <p>You don't have any friends yet. Go to <a href="/search">Search</a> to find new contacts</p>
+          </div>
           <div class="content-friends" v-if="friends.length">
             <ul>
               <li
                 v-for="friend in friends"
-                v-on:click="show(friend.data.id)"
-                :key="friend.data.id"
-              >{{ friend.data.username }}</li>
+                v-on:click="showuser(friend.id)"
+                :key="friend.id"
+              >{{ friend.username }}</li>
             </ul>
           </div>
         </div>
@@ -28,29 +47,28 @@
               <span>Email:</span>
               {{ currentuser.email}}
             </li>
-            <li v-if="currentuser.social.phone">
+            <li v-if="currentuser.socialmedia.phone">
               <span>Phone:</span>
-              {{ currentuser.social.phone}}
+              {{ currentuser.socialmedia.phone}}
             </li>
-            <li v-if="currentuser.social.facebook">
+            <li v-if="currentuser.socialmedia.facebook">
               <span>Facebook:</span>
-              {{ currentuser.social.facebook}}
+              {{ currentuser.socialmedia.facebook}}
             </li>
-            <li v-if="currentuser.social.instagram">
+            <li v-if="currentuser.socialmedia.instagram">
               <span>Instagram:</span>
-              {{ currentuser.social.instagram}}
+              {{ currentuser.socialmedia.instagram}}
             </li>
-            <li v-if="currentuser.social.youtube">
+            <li v-if="currentuser.socialmedia.youtube">
               <span>Youtube:</span>
-              {{ currentuser.social.youtube}}
+              {{ currentuser.socialmedia.youtube}}
             </li>
-            <li  v-if="currentuser.social.twitter">
+            <li v-if="currentuser.socialmedia.twitter">
               <span>Twitter:</span>
-              {{ currentuser.social.twitter}}
+              {{ currentuser.socialmedia.twitter}}
             </li>
           </ul>
         </div>
-        <div></div>
       </div>
     </div>
   </div>
@@ -60,54 +78,94 @@
 export default {
   name: "Contacts",
   methods: {
-    getlist: function() {
+    getfriends: function() {
       this.$http
-        .get(this.$api + "/user/" + this.$store.getters.userID, {
-          headers: { token: this.$store.getters.token }
-        })
+        .post(
+          this.$api + "/friends/friendslist",
+          { id: this.$store.getters.userID },
+          {
+            headers: { token: this.$store.getters.token }
+          }
+        )
         .then(response => {
-          this.friendsID = response.data.friends;
-          this.getfriend();
+          this.friends = response.data;
         })
         .catch(function(error) {
           console.log(error);
         });
     },
-    getfriend: function() {
-  
-      let users = [];
-      let promises = [];
-      for (let i = 0; i < this.friendsID.length; i++) {
-        promises.push(
-          this.$http
-            .get(this.$api + "/user/" + this.friendsID[i], {
-              headers: { token: this.$store.getters.token }
-            })
-            .then(response => {
-              this.friends.push(response);
-            })
-        );
+    showuser: function(uid) {
+      console.log(uid);
+      if(this.currentuser == null || this.currentuser.id != uid){
+     this.$http
+        .post(this.$api + "/user/get" , {id : uid},{
+          headers: { token: this.$store.getters.token }
+        })
+        .then(response => {
+          this.currentuser = response.data;
+          console.log(this.currentuser);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
       }
-
-      Promise.all(promises).then(() => console.log(users));
     },
-    show: function(f) {
+  /*  show: function(f) {
+      console.log(f);
       for (let i = 0; i < this.friends.length; i++) {
         if (this.friends[i].data.id == f) {
           this.currentuser = this.friends[i].data;
         }
       }
       console.log(f);
+    },*/
+    frequests: function() {
+      this.$http
+        .post(
+          this.$api + "/friends/friendrequests",
+          { id: this.$store.getters.userID },
+          {
+            headers: { token: this.$store.getters.token }
+          }
+        )
+        .then(response => (this.listfr = response.data))
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    fresponse: function(frid, t) {
+      this.$http
+        .post(
+          this.$api + "/friends/friendresponse",
+          { frid: frid, type: t },
+          {
+            headers: { token: this.$store.getters.token }
+          }
+        )
+        .then(this.init())
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    init: function() {
+      this.friendsID = [];
+      this.friends = [];
+      this.listfr = null;
+      this.getfriends();
+      this.frequests();
     }
   },
+
   mounted() {
-    this.getlist();
+    this.getfriends();
+    this.frequests();
   },
   created() {},
   data() {
     return {
       friendsID: [],
       friends: [],
+      listfr: [],
       currentuser: null
     };
   }
