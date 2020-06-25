@@ -13,11 +13,11 @@ mongoose.set('useFindAndModify', false);
 /**
  * @description - Router use Cors on production
  */
-router.use(function (req, res, next) {
+/*router.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "https://priceless-panini-34c7e3.netlify.app");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
-});
+});*/
 
 /**
  * @method - POST
@@ -165,25 +165,31 @@ router.post(
 
 /**
  * @method - POST
- * @param - /update/:id
+ * @param - /update
  * @description - User Update / Add Social Media networks
  */
 
-router.post("/update/:id", auth, async (req, res) => {
+router.post("/update", auth, async (req, res) => {
   try {
-    if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-      var userid = req.params.id;
-
-      var fb = req.body.fb;
-      var ig = req.body.fig;
-      var tw = req.body.tw;
-      var ph = req.body.ph;
-      var yt = req.body.yt;
-
-      const user = await User.findOneAndUpdate(
-        { _id: userid }, { "$set": { "socialmedia.facebook": fb, "socialmedia.instagram": ig, "socialmedia.phone": ph, "socialmedia.youtube": yt, "socialmedia.twitter": tw } }
-      )
-      res.json(user);
+    var userid = req.body.id;
+    if (userid.match(/^[0-9a-fA-F]{24}$/)) {
+      var sm = req.body.sm;
+      console.log(typeof sm);
+      console.log(sm);
+      const us = await User.findByIdAndUpdate(
+        userid,
+        { $set: { socialmedia: sm } },
+        { upsert: true },
+        function(err, result) {
+          if (err) {
+            res.send(err);
+          } else {
+            res.send(result);
+          }
+        }
+      );
+      
+     // res.json("User Updated");
 
     } else {
       res.send({ message: "User ID incorrect" });
@@ -192,35 +198,33 @@ router.post("/update/:id", auth, async (req, res) => {
     res.send({ message: "Error in Fetching users" });
     console.log(e);
   }
-
-
 });
 
 
 /**
- * @method - GET
+ * @method - POST
  * @description - Get User
- * @param - /%userID
  */
-router.get("/:id", auth, async (req, res) => {
+router.post("/get", auth, async (req, res) => {
   try {
     // request.user is getting fetched from Middleware after token authentication
-    if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-
-      const user = await User.findById(req.params.id);
-
-      if (req.user.id == req.params.id) {
-        res.json(user);
-      } else {
-        console.log(user);
-        var x = {
-          "id": user.id,
-          "username": user.username,
-          "email": user.email,
-          "social": user.socialmedia
-        };
-        res.json(x);
-      }
+    var id = req.body.id;
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+      const user = await User.findById(id);
+      res.json(user);
+      /* if (req.user.id == id) {
+         
+       } else {
+        /* console.log(user);
+         var x = {
+           "id": user._id,
+           "username": user.username,
+           "email": user.email,
+           "social": user.socialmedia
+         };
+         res.json(x);*/
+      /*  res.json("Erroor");
+      }*/
     } else {
       res.send({ message: "User ID incorrect" });
     }
@@ -246,35 +250,6 @@ router.post("/search", auth, async (req, res) => {
     res.send({ message: "Error in Fetching users" });
   }
 
-});
-
-/**
- * @method - POST
- * @description - Friend Request
- * @param - /friend/%userID
- */
-router.post("/friend/:userID", auth, async (req, res) => {
-  try {
-    //if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-    var friendrecipient = req.params.userID;
-    var friendrequester = req.body.id;
-    if (friendrequester == friendrecipient) {
-      res.send({ message: "Can't request yourself" });
-    } else {
-      const updateUserA = await User.findOneAndUpdate(
-        { _id: friendrequester },
-        { $push: { friends: friendrecipient } }
-      )
-      const updateUserB = await User.findOneAndUpdate(
-        { _id: friendrecipient },
-        { $push: { friends: friendrequester } }
-      )
-      res.send({ message: "Request sent" });
-    }
-  } catch (e) {
-    res.send({ message: "Error in Sending Request" });
-    console.log(e);
-  }
 });
 
 module.exports = router;

@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const user = require("./api/user/route/user"); //new addition
+const user = require("./api/user/route/user");
+const friends = require("./api/user/route/friends");
 const InitiateMongoServer = require("./config/db");
 
 var cors = require('cors')
@@ -28,6 +29,7 @@ app.get("/", (req, res) => {
  * Method - *
  */
 app.use("/user", user);
+app.use("/friends", friends);
 
 app.listen(PORT, (req, res) => {
   console.log(`Server Started at PORT ${PORT}`);

@@ -19,23 +19,10 @@ const UserSchema = mongoose.Schema({
     default: Date.now()
   },
   socialmedia: {
-    facebook: {
-    type: String,
+    type: Object,
+    default: ''
   },
-    instagram: {
-    type: String,
-  },
-    twitter: {
-    type: String,
-  },
-    youtube: {
-    type: String,
-  },
-    phone: {
-    type: String,
-  }
-},
-  friends: [{ type: Schema.Types.ObjectId, ref: 'Friend'}]
+  friends: [{ type: Schema.Types.ObjectId, ref: 'Friend' }]
 });
 
 
