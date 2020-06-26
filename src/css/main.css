@@ -52,6 +52,18 @@ div#nav p{
 button {
 outline: none;
 }
+.btndelete {
+  background-color: #ff3b3F;
+  border: none;
+  color: white;
+  padding: 12px 16px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.btndelete:hover {
+  background-color: #333;
+  color: #ff3b3F;
+}
 
 a {
 text-decoration: none;
@@ -220,12 +232,54 @@ transform:translateX(-2em);
 }
 
 #socialnetworks{
- width: 70%;
+  width: 100%;
 }
 
-#socialnetworks label {
+#socialnetworks .demo>label {
   text-align: left;
   padding-top: 12px;
+}
+
+#socialnetworks .demo>li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 20px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid gray;
+}
+
+#socialnetworks li>label {
+  text-transform: capitalize;
+  width: 100px;
+  font-size: 1rem;
+  font-weight: bold;
+  overflow: hidden;
+}
+
+#socialnetworks li>input {
+  font-size: 1.2rem;
+}
+
+#socialnetworks .groupField{
+  width: 250px;
+  padding: 0 25px;
+}
+#socialnetworks .submitButton {
+  background-color: none;
+  color: white;
+  font-weight: bold;
+  width: 150px;
+  margin-left: auto;
+  margin-top: 0;
+}
+#socialnetworks .submitButton:hover {
+  background-color: #3bff3f;
+  color: #333;
+}
+
+#Addfield #newfield {
+  margin-right: 25px;
 }
 
 .message {
@@ -246,10 +300,196 @@ transform:translateX(-2em);
 
 .profile span {
     float: left;
-    padding-left: 20px;
+   padding-left: 20px;
 }
 
 span {
+ /* float: left;
+  padding-left: 20px;*/
+}
+
+.container {
+  -webkit-box-shadow: 14px 15px 0px -3px#394140;
+  -moz-box-shadow: 14px 15px 0px -3px#394140;
+  box-shadow: 14px 15px 0px -3px#394140;
+  border-radius: 8px 8px 8px 8px;
+  -moz-border-radius: 8px 8px 8px 8px;
+  -webkit-border-radius: 8px 8px 8px 8px;
+  margin: auto;
+  margin-top: 40px;
+  display: flex;
+  width: 80%;
+  min-height: 400px;
+  color: white;
+  overflow: auto;
+}
+.innercontainer{
+margin: auto;
+}
+#contacts.container {
+  background-color: rgb(165, 165, 165);
+}
+
+#contacts .left,
+#contacts .right {
+  padding: 20px 20px 20px 20px;
+  width: 50%;
+  font-size: 20px;
+  background-color: rgb(165, 165, 165);
+}
+
+.left {
+  border-right: solid 2px white;
+}
+
+#profile{
+  padding: 20px 20px 20px 20px;
+  font-size: 20px;
+  min-height: unset;
+  background-color: rgb(165, 165, 165);
+}
+
+#profilesn{
+  padding: 20px 20px 20px 20px;
+  font-size: 20px;
+  background-color: rgb(165, 165, 165);
+}
+
+#profilessn .innercontainer{
+  width: 100%;
+  margin: auto; 
+}
+
+.left {
+  border-right: solid 2px white;
+}
+
+.header {
+  display: flex;
+  justify-content: space-evenly;
+  margin: auto;
+  width: 30%;
+  flex-wrap: wrap;
+  align-items: center;
+  border-bottom: solid 2px white;
+  margin-bottom: 30px;
+}
+
+.contactContainer {
+  display: flex;
+  justify-content: space-around;
+}
+
+.contactNames {
+  display: table;
+  flex-direction: column;
+  align-content: center;
+}
+
+.contactElement {
+  font-size: 13px;
+  vertical-align: middle;
+  display: table-cell;
+}
+
+.contactSocial {
+  display: table;
+  flex-direction: column;
+  align-content: center;
+}
+
+.contactForm {
+  margin: auto;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  color: white;
+}
+
+.userinfo li {
+  height: 15px;
+  cursor: unset;
+}
+
+.userinfo span {
   float: left;
-  padding-left: 20px;
+  padding-left: 10px;
+}
+
+.contact li {
+  background: #333;
+  color: white;
+  padding: 8px 0;
+  margin: 0;
+  cursor: pointer;
+}
+.contact li:nth-child(odd) {
+  background: #444;
+  color: white;
+}
+.contact li:hover {
+  background: #999 !important;
+  color: #333 !important;
+}
+
+.friends {
+  text-align: center;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.friends .content{
+  padding:0;
+  width: 70%;
+}
+
+.friendsfriends {
+  display: flex;
+  justify-content: space-around;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+    align-items: center;
+    padding: 10px 5%;
+    margin-bottom: 0;
+    
+}
+.friendsfriends:hover{
+  background-color: #666;
+}
+
+.searchItem {
+  min-width: 100px;
+  width: 150px;
+  text-align: left;
+}
+
+button.searchItem {
+  text-align: center;
+}
+
+button.addFriend {
+  text-align: center;
+  min-width: 80px;
+  text-align: center;
+  background: none;
+  color: white;
+  font-weight: bold;
+  width: 150px;
+  margin-left: auto;
+  margin-top: 0;
+  border-radius: 3px 3px 3px 3px;
+  -moz-border-radius: 3px 3px 3px 3px;
+  -webkit-border-radius: 3px 3px 3px 3px;
+  border: solid white 2px;
+  padding: 10px;
+  cursor: pointer;
+  outline: none;
+  
+}
+
+button.addFriend:hover {
+  border-color: #3bff3f;
+  
 }

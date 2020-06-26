@@ -4,12 +4,12 @@
       <h1>Login</h1>
       <div>
         <div v-if="errors.length" class="alert">
-        <p >
-          <b>Please correct the following error(s):</b>
-        </p>
-        <ul >
-          <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
-        </ul>
+          <p>
+            <b>Please correct the following error(s):</b>
+          </p>
+          <ul>
+            <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
+          </ul>
         </div>
         <form id="loginForm" @submit.prevent="checkForm">
           <div>
@@ -18,14 +18,9 @@
           </div>
           <div>
             <label for="password">Password</label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              v-model="password"
-            />
+            <input type="password" name="password" id="password" v-model="password" />
           </div>
-          <input class="submitButton" type="submit" value="Let's Go!" />
+          <input class="submitButton" type="submit" value="Login" />
         </form>
       </div>
     </div>
@@ -42,7 +37,7 @@ export default {
     return {
       errors: [],
       email: null,
-      password: null,
+      password: null
     };
   },
   methods: {
@@ -51,9 +46,20 @@ export default {
       let password = this.password;
       this.$store
         .dispatch("login", { email, password })
-        .then(() => this.$router.push("/profile"))
+        .then(() => {
+          this.$router.push("/profile");
+          this.$swal.fire({
+            text: "Welcome!",
+            icon: "success",
+            timer: 3000,
+            toast: true,
+            position: "top-end"
+          });
+        })
         .catch(err => {
-          err.data.errors ? this.errors.push(err.data.errors["0"].msg) : this.errors.push(err.data.message);
+          err.data.errors
+            ? this.errors.push(err.data.errors["0"].msg)
+            : this.errors.push(err.data.message);
         });
     },
     checkForm: function(e) {

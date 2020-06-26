@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="content">
+    <div class="contentSearch">
       <h1>Search</h1>
       <div>
         <p v-if="errors.length">
@@ -9,11 +9,12 @@
 
         <form id="searchForm" @submit="checkForm">
           <p>
-            <label for="search">Search</label>
+            <label for="search">Username</label>
             <input type="text" name="search" id="search" v-model="input" />
           </p>
-          <input class="submitButton" type="submit" value="Let's Go!" />
+          <input class="submitButton" type="submit" value="Search" />
         </form>
+
         <div class="message true" v-if="status === 'updated'">
           <p>Friend Added</p>
         </div>
@@ -23,13 +24,13 @@
       </div>
     </div>
     <transition name="fade" mode="out-in">
-      <div class="content" v-if="list">
+      <div v-if="list">
         <div class="friends">
-          <ul v-for="item in list" :key="item._id">
-            <li class="friendsfriends">
+          <ul class="content">
+            <li v-for="item in list" :key="item._id" class="friendsfriends">
               <span class="searchItem">{{ item.username}}</span>
-              <span class="searchItem">{{ item.email}}</span>
-              <button class="searchItem" v-on:click="addfriend(item._id)">Add Friend</button>
+              <span class="searchItem">{{ item.name}}</span>
+              <button class="addFriend" v-on:click="addfriend(item._id)">Send Request</button>
             </li>
           </ul>
         </div>
@@ -78,11 +79,20 @@ export default {
     addfriend: function(f_id) {
       this.$http
         .post(
-          this.$api + "/user/friend/" + f_id,
-          { id: this.$store.getters.userID },
+          this.$api + "/friends/request",
+          { id: this.$store.getters.userID, recid: f_id },
           { headers: { token: this.$store.getters.token } }
         )
-        .then(response => {  this.status = "updated"; console.log(response)})
+        .then(response => {   
+        console.log(response);
+         this.$swal.fire({
+            text: "Friend request sent!",
+            icon: "success",
+            timer: 3000,
+            toast: true,
+            position: "top-end"
+          });
+        })
         .catch(function(error) {
           console.log(error);
            this.status = "error";
@@ -102,24 +112,5 @@ export default {
 </script>
 
 <style>
-.friends {
-  text-align: center;
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.friendsfriends {
-  display: flex;
-  justify-content: space-around;
-}
 
-.searchItem {
-  min-width: 100px;
-  text-align: left;
-}
-
-button.searchItem {
-  text-align: center;
-}
 </style>

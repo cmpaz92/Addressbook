@@ -16,13 +16,17 @@
             <label for="username">Username</label>
             <input type="text" name="username" id="username" v-model="username" />
           </div>
+                 <div>
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" v-model="name" />
+          </div>
           <div>
             <label for="email">Email</label>
             <input type="email" name="email" id="email" v-model="email" />
           </div>
           <div>
             <label for="password">Password</label>
-            <input type="password" name="password" id="password" v-model="password" />
+            <input type="password"  id="password" v-model="password" />
           </div>
           <input class="submitButton" type="submit" value="Let's Go!" />
         </form>
@@ -41,6 +45,7 @@ export default {
   data: function() {
     return {
       errors: [],
+      name: null,
       username: null,
       email: null,
       password: null
@@ -48,13 +53,16 @@ export default {
   },
   methods: {
     checkForm: function(e) {
-      if (this.username && this.email && this.password) {
+      if (this.username && this.email && this.password && this.name) {
         this.signup();
       }
       this.errors = [];
 
       if (!this.username) {
         this.errors.push("Username required.");
+      }
+      if (!this.name) {
+        this.errors.push("Name required.");
       }
       if (!this.email) {
         this.errors.push("Email required.");
@@ -68,6 +76,7 @@ export default {
     signup: function() {
       let data = {
         username: this.username,
+        name: this.name,
         email: this.email,
         password: this.password
       };
