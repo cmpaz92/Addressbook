@@ -16,7 +16,7 @@
       </div>
       </div>
     </transition>
-    <div class="container contact">
+    <div id="contacts" class="container contact">
       <div class="left">
         <div class="header">
           <h1>My Contacts</h1>
@@ -30,8 +30,8 @@
               <li
                 v-for="friend in friends"
                 v-on:click="showuser(friend.id)"
-                :key="friend.id"
-              >{{ friend.username }}</li>
+                :key="friend.id" @click="activate(friend.id)" :class="{ active : active_el == friend.id }"
+              >{{ friend.name }} <span>{{ friend.username }}</span></li>
             </ul>
           </div>
         </div>
@@ -41,33 +41,13 @@
           <h1>Contact Info</h1>
         </div>
         <div class="userinfo" v-if="currentuser">
-          <h3>{{ currentuser.username}}</h3>
-          <ul>
-            <li>
-              <span>Email:</span>
-              {{ currentuser.email}}
-            </li>
-            <li v-if="currentuser.socialmedia.phone">
-              <span>Phone:</span>
-              {{ currentuser.socialmedia.phone}}
-            </li>
-            <li v-if="currentuser.socialmedia.facebook">
-              <span>Facebook:</span>
-              {{ currentuser.socialmedia.facebook}}
-            </li>
-            <li v-if="currentuser.socialmedia.instagram">
-              <span>Instagram:</span>
-              {{ currentuser.socialmedia.instagram}}
-            </li>
-            <li v-if="currentuser.socialmedia.youtube">
-              <span>Youtube:</span>
-              {{ currentuser.socialmedia.youtube}}
-            </li>
-            <li v-if="currentuser.socialmedia.twitter">
-              <span>Twitter:</span>
-              {{ currentuser.socialmedia.twitter}}
-            </li>
-          </ul>
+          <h3>{{ currentuser.name}}<span>{{ currentuser.username}}</span></h3>
+            <ul id="v-for-object" class="demo">
+              <li v-for="(item, index) in currentuser.socialmedia" :key="index">
+             <h4>{{item.name}}:</h4>
+              <span>{{ item.value }}</span>
+              </li>
+            </ul>
         </div>
       </div>
     </div>
@@ -142,7 +122,8 @@ export default {
             headers: { token: this.$store.getters.token }
           }
         )
-        .then(this.init())
+        .then(() => {this.init();this.getfriends();
+    this.frequests();})
         .catch(function(error) {
           console.log(error);
         });
@@ -150,9 +131,10 @@ export default {
     init: function() {
       this.friendsID = [];
       this.friends = [];
-      this.listfr = null;
-      this.getfriends();
-      this.frequests();
+      this.listfr = [];
+    },
+    activate:function(el){
+        this.active_el = el;
     }
   },
 
@@ -166,6 +148,7 @@ export default {
       friendsID: [],
       friends: [],
       listfr: [],
+      active_el:0,
       currentuser: null
     };
   }
@@ -173,99 +156,5 @@ export default {
 </script>
 
 <style>
-.container {
-  -webkit-box-shadow: 14px 15px 0px -3px#394140;
-  -moz-box-shadow: 14px 15px 0px -3px#394140;
-  box-shadow: 14px 15px 0px -3px#394140;
-  border-radius: 8px 8px 8px 8px;
-  -moz-border-radius: 8px 8px 8px 8px;
-  -webkit-border-radius: 8px 8px 8px 8px;
-  margin: auto;
-  margin-top: 40px;
-  display: flex;
-  width: 80%;
-  min-height: 400px;
-  color: white;
-  overflow: auto;
-}
 
-.left,
-.right {
-  padding: 20px 20px 20px 20px;
-  width: 50%;
-  font-size: 20px;
-  background-color: rgb(165, 165, 165);
-}
-
-.left {
-  border-right: solid 2px white;
-}
-
-.header {
-  display: flex;
-  justify-content: space-evenly;
-  margin: auto;
-  width: 30%;
-  flex-wrap: wrap;
-  align-items: center;
-  border-bottom: solid 2px white;
-  margin-bottom: 30px;
-}
-
-.contactContainer {
-  display: flex;
-  justify-content: space-around;
-}
-
-.contactNames {
-  display: table;
-  flex-direction: column;
-  align-content: center;
-}
-
-.contactElement {
-  font-size: 13px;
-  vertical-align: middle;
-  display: table-cell;
-}
-
-.contactSocial {
-  display: table;
-  flex-direction: column;
-  align-content: center;
-}
-
-.contactForm {
-  margin: auto;
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  color: white;
-}
-
-.userinfo li {
-  height: 15px;
-  cursor: unset;
-}
-
-.userinfo span {
-  float: left;
-  padding-left: 10px;
-}
-
-.contact li {
-  background: #333;
-  color: white;
-  padding: 8px 0;
-  margin: 0;
-  cursor: pointer;
-}
-.contact li:nth-child(odd) {
-  background: #444;
-  color: white;
-}
-.contact li:hover {
-  background: #999 !important;
-  color: #333 !important;
-}
 </style>
