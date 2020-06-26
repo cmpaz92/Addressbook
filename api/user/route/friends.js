@@ -71,9 +71,9 @@ router.post("/friendslist", auth, async (req, res) => {
              // console.log(usrq);
            //   console.log(usrc);
               if(usrq._id == userid){
-                var frq = { username: usrc.username, id: usrc._id };
+                var frq = { username: usrc.username, name:usrc.name, id: usrc._id };
               }else if (usrc._id == userid){
-                var frq = { username: usrq.username, id: usrq._id };
+                var frq = { username: usrq.username, name:usrq.name, id: usrq._id };
               }
               arr.push(frq);
           }
@@ -131,10 +131,10 @@ router.post("/friendresponse", auth, async (req, res) => {
   try {
     var id = req.body.frid;
     var type = req.body.type; // 1 Accept 2 Reject
-    const user = await Friend.findById(id);
-    const UserB = user.recipient;
-    const UserA = user.requester;
-    if (user.status == 2 && type == 1) { //Accept request
+    const friend = await Friend.findById(id);
+    const UserB = friend.recipient;
+    const UserA = friend.requester;
+    if (friend.status == 2 && type == 1) { //Accept request
 
       Friend.findOneAndUpdate(
         { requester: UserA, recipient: UserB },
@@ -150,12 +150,19 @@ router.post("/friendresponse", auth, async (req, res) => {
         function (err) {
           if (err)
             return res.send(err);
-
         }
       );
+      const updateUserA = await User.findOneAndUpdate(
+        { _id: friendrequester },
+        { $push: { 'groups.general': docA._id } }
+      )
+      const updateUserB = await User.findOneAndUpdate(
+        { _id: friendrecipient },
+        { $push: { 'groups.general': docB._id } }
+      )
       res.send({ message: "User Request Accepted" });
 
-    } else if (user.status == 2 && type == 2) { // Reject Request
+    } else if (friend.status == 2 && type == 2) { // Reject Request
       const docA = await Friend.findOneAndRemove(
         { requester: UserA, recipient: UserB }
       )

@@ -46,6 +46,7 @@ router.post(
 
     const {
       username,
+      name,
       email,
       password
     } = req.body;
@@ -62,6 +63,7 @@ router.post(
 
       user = new User({
         username,
+        name,
         email,
         password,
       });
@@ -244,7 +246,7 @@ router.post("/get", auth, async (req, res) => {
 router.post("/search", auth, async (req, res) => {
   try {
     var searchfriend = req.body.username;
-    const user = await User.find({ username: { $regex: '.*' + searchfriend + '.*' } }, function (err, result) { });
+    const user = await User.find({ username: { $regex: '.*' + searchfriend + '.*' }, }, function (err, result) { });
     res.json(user);
   } catch (e) {
     res.send({ message: "Error in Fetching users" });

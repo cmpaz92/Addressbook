@@ -6,6 +6,10 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  name: {
+    type: String,
+    required: true
+  },
   email: {
     type: String,
     required: true
@@ -20,7 +24,19 @@ const UserSchema = mongoose.Schema({
   },
   socialmedia: {
     type: Object,
-    default: ''
+    default: [
+      { name: "phone", value: "", group: [1] },
+      { name: "facebook", value: "", group: [1] },
+      { name: "twitter", value: "", group: [1] },
+    ]
+  },
+  groups: {
+    type: Object,
+    default: [{ name: "general", members: [] },
+    { name: "family", members: [] },
+    { name: "friends", members: [] },
+    { name: "work", members: [] },
+    ]
   },
   friends: [{ type: Schema.Types.ObjectId, ref: 'Friend' }]
 });
