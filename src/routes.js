@@ -20,12 +20,14 @@ let router = new VueRouter({
     meta: {requiresAuth: true} },
     { path: "/profile", component: Profile, name: "Profile", 
     meta: {requiresAuth: true} },
-    { path: "/signup", component: SignUp, name: "Signup" },
+    { path: "/signup", component: SignUp, name: "Signup", 
+    meta: {notLoggedIn: true} },
     { path: '/user/:id', component: User, name: "User", 
     meta: {requiresAuth: true} },
     { path: "/search", component: Search, name: "Search", 
     meta: {requiresAuth: true}},
-    { path: "/login", component: Login, name: "login" },
+    { path: "/login", component: Login, name: "login" , 
+    meta: {notLoggedIn: true} },
     { path: '/secure', component: Secure, name: 'Secure', 
       meta: {requiresAuth: true}
     }
@@ -33,6 +35,11 @@ let router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.notLoggedIn)) {
+    if (store.getters.isLoggedIn) {
+      next('/profile')
+    }
+  }
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (store.getters.isLoggedIn) {
       next()

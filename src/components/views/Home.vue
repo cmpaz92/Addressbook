@@ -1,10 +1,13 @@
 <template>
   <div id="app">
     <div class="content">
-        <h1>Let's collect!</h1>
-        <p class="infoParagraph">Addressio helps to store all your social media profiles in one place. It makes it easy to share and find 
-          people - see it as an universal addressbook that collects and connects! 
+        <img src="@/assets/logo.png">
+        
+        <p class="infoParagraph">Kipiu is a tool that helps you store all your social media profiles in one place.</p>
+        <p> It makes it easy to have an updated contact addressbook
+          - see it as an universal addressbook that collects and connects! 
         </p>
+        <p>Let's Kip Iu connected!</p>
         <router-link to="/signup"><button class="getStartedButton">Get Started</button></router-link>
     </div>
     <transition name="fade" mode="out-in">
