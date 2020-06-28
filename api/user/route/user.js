@@ -277,7 +277,7 @@ router.post("/getcontact", auth, async (req, res) => {
       const socialm = [];
       //If user is in private list
       arrpriv = userB.private;
-      if (arrpriv.indexOf(id) > 0) {
+      if (arrpriv.indexOf(id) >= 0) {
         for (var sm in userB.socialmedia) {
           socialm.push(userB.socialmedia[sm])
         }
