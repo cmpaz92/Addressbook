@@ -123,13 +123,11 @@ export default {
             { headers: { token: this.$store.getters.token } }
           )
           .then(response => {
-            console.log(response.data);
             if (response.data == "true") {
               this.currentuserprivacy = true;
             } else if (response.data == "false") {
               this.currentuserprivacy = false;
             }
-            this.userprivacy = this.currentuserprivacy;
           })
           .catch(function(error) {
             console.log(error);
@@ -137,7 +135,6 @@ export default {
       }
     },
     updateprivacy: function(uid, p) {
-      console.log("private update" + uid + p);
       this.$http
         .post(
           this.$api + "/user/updateprivacy",
@@ -220,8 +217,7 @@ export default {
       listfr: [],
       active_el: 0,
       currentuser: null,
-      currentuserprivacy: null,
-      userprivacy: null
+      currentuserprivacy: false,
     };
   }
 };

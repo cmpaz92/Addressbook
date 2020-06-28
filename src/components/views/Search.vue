@@ -78,9 +78,7 @@ export default {
         )
         .then(response => {
           this.list = response.data;
-          console.log(typeof this.searched);
           this.searched = true;
-          console.log(typeof this.searched);
         })
         .catch(function(error) {
           console.log(error);
@@ -93,8 +91,7 @@ export default {
           { id: this.$store.getters.userID, recid: f_id },
           { headers: { token: this.$store.getters.token } }
         )
-        .then(response => {
-          console.log(response);
+        .then(() => {
           this.$swal.fire({
             text: "Friend request sent!",
             icon: "success",
