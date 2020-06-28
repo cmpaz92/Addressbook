@@ -19,7 +19,7 @@
       </div>
     </div>
     <div id="profilesn" class="container">
-       <div class="innercontainer">
+      <div class="innercontainer">
         <div class="header">
           <h1>My Social Networks</h1>
         </div>
@@ -31,31 +31,34 @@
             <div class="message false" v-if="status === 'error'">
               <p>Error Updating</p>
             </div>
-             <input class="submitButton" type="submit" value="Save" />
+            <input class="submitButton" type="submit" value="Save" />
             <ul id="v-for-object" class="demo">
               <li v-for="(value, index) in socialmedia" :key="index">
                 <label class="lblinput" :for="value['name']+index">{{ value["name"] }}</label>
                 <input
-                class="fldinput"
+                  class="fldinput"
                   v-model="value['value']"
                   :id="value['name']+index"
                   type="text"
                   :placeholder="value['name']"
                   :name="value['name']"
                 />
-	<label class="lock">
-    <input class="chkprivate" type="checkbox" :id="'checkbox'+index" v-model="value['privacy']">
-     <label class="lblprivate" :for="'checkbox'+index">{{value['privacy'] ? 'Private' : 'General'}}</label>
-  </label>
-
-               
-                
-                
+                <label class="lock">
+                  <input
+                    class="chkprivate"
+                    type="checkbox"
+                    :id="'checkbox'+index"
+                    v-model="value['privacy']"
+                  />
+                  <label
+                    class="lblprivate"
+                    :for="'checkbox'+index"
+                  >{{value['privacy'] ? 'Private' : 'General'}}</label>
+                </label>
 
                 <button class="btndelete" type="button" v-on:click="deleteField(index)">X</button>
               </li>
             </ul>
-           
           </form>
 
           <form id="Addfield" @submit.prevent="addField" class="addField">
@@ -124,7 +127,11 @@ export default {
         });
     },
     addField() {
-      this.socialmedia.push({ name: this.newfield, value: "", privacy: 'false' });
+      this.socialmedia.push({
+        name: this.newfield,
+        value: "",
+        privacy: "false"
+      });
       this.newfield = "";
     },
     deleteField(item) {

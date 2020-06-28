@@ -1,47 +1,31 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link class="home" to="/">
-        Home
-      </router-link>
+      <router-link class="home" to="/">Home</router-link>
       <div v-if="isLoggedIn">
-        <router-link to="/contacts">
-          Contacts
-        </router-link>
-        <router-link to="/profile">
-          Profile
-        </router-link>
-        <router-link to="/search">
-          Search
-        </router-link>
+        <router-link to="/contacts">Contacts</router-link>
+        <router-link to="/profile">Profile</router-link>
+        <router-link to="/search">Search</router-link>
       </div>
       <div v-if="!isLoggedIn">
-      <router-link to="/signUp">
-        Sign Up
-      </router-link>
-      <router-link to="/login">
-        Login
-      </router-link>
+        <router-link to="/signUp">Sign Up</router-link>
+        <router-link to="/login">Login</router-link>
       </div>
       <div v-if="isLoggedIn">
         <a @click="logout">Logout</a>
       </div>
     </div>
-     <transition name="fade" mode="out-in">
-     <router-view />
-  </transition>
-     
+    <transition name="fade" mode="out-in">
+      <router-view />
+    </transition>
   </div>
 </template>
 
 <script>
-
 export default {
   name: "App",
   data() {
-    return {
-
-    };
+    return {};
   },
   computed: {
     isLoggedIn: function() {
@@ -69,5 +53,5 @@ export default {
 </script>
 
 <style lang="scss">
-  @import './css/main.scss';
+@import "./css/main.scss";
 </style>
