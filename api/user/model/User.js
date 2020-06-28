@@ -25,9 +25,9 @@ const UserSchema = mongoose.Schema({
   socialmedia: {
     type: Object,
     default: [
-      { name: "phone", value: "", group: [1] },
-      { name: "facebook", value: "", group: [1] },
-      { name: "twitter", value: "", group: [1] },
+      { name: "phone", value: "", privacy: 'false' },
+      { name: "facebook", value: "", privacy: 'false' },
+      { name: "twitter", value: "", privacy: 'false' },
     ]
   },
   groups: {
@@ -38,7 +38,8 @@ const UserSchema = mongoose.Schema({
     { name: "work", members: [] },
     ]
   },
-  friends: [{ type: Schema.Types.ObjectId, ref: 'Friend' }]
+  friends: [{ type: Schema.Types.ObjectId, ref: 'Friend' }],
+  private: [String],
 });
 
 

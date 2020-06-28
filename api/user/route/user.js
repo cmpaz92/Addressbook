@@ -176,13 +176,11 @@ router.post("/update", auth, async (req, res) => {
     var userid = req.body.id;
     if (userid.match(/^[0-9a-fA-F]{24}$/)) {
       var sm = req.body.sm;
-      console.log(typeof sm);
-      console.log(sm);
       const us = await User.findByIdAndUpdate(
         userid,
         { $set: { socialmedia: sm } },
         { upsert: true },
-        function(err, result) {
+        function (err, result) {
           if (err) {
             res.send(err);
           } else {
@@ -190,8 +188,40 @@ router.post("/update", auth, async (req, res) => {
           }
         }
       );
-      
-     // res.json("User Updated");
+
+      // res.json("User Updated");
+
+    } else {
+      res.send({ message: "User ID incorrect" });
+    }
+  } catch (e) {
+    res.send({ message: "Error in Fetching users" });
+    console.log(e);
+  }
+});
+
+/**
+ * @method - POST
+ * @param - /updateprivacy
+ * @description - Contact Update Privacy
+ */
+
+router.post("/updateprivacy", auth, async (req, res) => {
+  try {
+    var id = req.body.id;
+    var uid = req.body.uid;
+    var p = req.body.privacy;
+
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+      if (p === true) {
+        const us = await User.findByIdAndUpdate(id, { $push: { private: uid } })
+
+      } else if (p === false) {
+        const us = await User.findById(id)
+        us.private.pull(uid);
+        us.save();
+      }
+      res.json("User Updated");
 
     } else {
       res.send({ message: "User ID incorrect" });
@@ -209,24 +239,84 @@ router.post("/update", auth, async (req, res) => {
  */
 router.post("/get", auth, async (req, res) => {
   try {
-    // request.user is getting fetched from Middleware after token authentication
     var id = req.body.id;
+
     if (id.match(/^[0-9a-fA-F]{24}$/)) {
       const user = await User.findById(id);
       res.json(user);
-      /* if (req.user.id == id) {
-         
-       } else {
-        /* console.log(user);
-         var x = {
-           "id": user._id,
-           "username": user.username,
-           "email": user.email,
-           "social": user.socialmedia
-         };
-         res.json(x);*/
-      /*  res.json("Erroor");
-      }*/
+    } else {
+      res.send({ message: "User ID incorrect" });
+    }
+  } catch (e) {
+    res.send({ message: "Error in Fetching user" });
+    console.log(e);
+  }
+});
+
+/**
+ * @method - POST
+ * @description - Get User contact
+ */
+router.post("/getcontact", auth, async (req, res) => {
+  try {
+    var id = req.body.id;
+    var uid = req.body.uid;
+    if (id.match(/^[0-9a-fA-F]{24}$/) && id.match(/^[0-9a-fA-F]{24}$/)) {
+      const userA = await User.findById(id);//requester
+      const userB = await User.findById(uid);
+      const private = userA.private;
+      const socialm = [];
+      //If user is in private list
+      if (private.find(element => element = uid) != null) {
+        for (var sm in userB.socialmedia) {
+          socialm.push(userB.socialmedia[sm])
+        }
+      } else {
+        for (var sm in userB.socialmedia) {
+          if (userB.socialmedia[sm].privacy == false) {
+            socialm.push(userB.socialmedia[sm])
+          }
+        }
+      }
+      var x = {
+        "id": userB._id,
+        "username": userB.username,
+        "email": userB.email,
+        "name": userB.name,
+        "socialmedia": socialm,
+
+      };
+      res.json(x);
+
+    } else {
+      res.send({ message: "User ID incorrect" });
+    }
+  } catch (e) {
+    res.send({ message: "Error in Fetching user" });
+    console.log(e);
+  }
+});
+
+/**
+ * @method - POST
+ * @description - Get Friend Permission
+ */
+router.post("/permission", auth, async (req, res) => {
+  try {
+    // request.user is getting fetched from Middleware after token authentication
+    var id = req.body.id;
+    var uid = req.body.uid;
+    if (id.match(/^[0-9a-fA-F]{24}$/) && id.match(/^[0-9a-fA-F]{24}$/)) {
+      const userA = await User.findById(id);//requester
+      const private = userA.private;
+
+      //If user is in private list
+      if (private.find(element => element = uid) != null) {
+        res.json('true');
+      } else {
+        res.json('false');
+      }
+
     } else {
       res.send({ message: "User ID incorrect" });
     }

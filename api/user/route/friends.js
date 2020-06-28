@@ -58,27 +58,24 @@ router.post("/friendslist", auth, async (req, res) => {
   try {
     // request.user is getting fetched from Middleware after token authentication
     var userid = req.body.id;
-//console.log(userid)
     if (userid) {
       const fl = await User.findById(userid);
       var arr = [];
       if (fl != null) {
         for (var frq in fl.friends) {
           const fs = await Friend.findById(fl.friends[frq]);
+          console.log(fl.friends[frq]);
           if (fs.status == 3) {
-              const usrq = await User.findById(fs.requester);
-              const usrc = await User.findById(fs.recipient);
-             // console.log(usrq);
-           //   console.log(usrc);
-              if(usrq._id == userid){
-                var frq = { username: usrc.username, name:usrc.name, id: usrc._id };
-              }else if (usrc._id == userid){
-                var frq = { username: usrq.username, name:usrq.name, id: usrq._id };
-              }
-              arr.push(frq);
+            const usrq = await User.findById(fs.requester);
+            const usrc = await User.findById(fs.recipient);
+            if (usrq._id == userid) {
+              var frq = { username: usrc.username, name: usrc.name, id: usrc._id };
+            } else if (usrc._id == userid) {
+              var frq = { username: usrq.username, name: usrq.name, id: usrq._id };
+            }
+            arr.push(frq);
           }
         }
-       // console.log(arr);
         res.json(arr);
       } else {
         res.send("No Friends yet");
@@ -152,14 +149,6 @@ router.post("/friendresponse", auth, async (req, res) => {
             return res.send(err);
         }
       );
-      const updateUserA = await User.findOneAndUpdate(
-        { _id: friendrequester },
-        { $push: { 'groups.general': docA._id } }
-      )
-      const updateUserB = await User.findOneAndUpdate(
-        { _id: friendrecipient },
-        { $push: { 'groups.general': docB._id } }
-      )
       res.send({ message: "User Request Accepted" });
 
     } else if (friend.status == 2 && type == 2) { // Reject Request
