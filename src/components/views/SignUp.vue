@@ -16,7 +16,7 @@
             <label for="username">Username</label>
             <input type="text" name="username" id="username" v-model="username" />
           </div>
-                 <div>
+          <div>
             <label for="name">Name</label>
             <input type="text" name="name" id="name" v-model="name" />
           </div>
@@ -26,7 +26,7 @@
           </div>
           <div>
             <label for="password">Password</label>
-            <input type="password"  id="password" v-model="password" />
+            <input type="password" id="password" v-model="password" />
           </div>
           <input class="submitButton" type="submit" value="Let's Go!" />
         </form>

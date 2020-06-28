@@ -38,7 +38,7 @@ axios.interceptors.response.use(function (response) {
     store.dispatch("logout")
     router.push("/login");
   } else {
-      return Promise.reject(error);
+      return error;
   }
 });
 Vue.prototype.$appName = 'My App'

@@ -24,7 +24,7 @@
       </div>
     </div>
     <transition name="fade" mode="out-in">
-      <div v-if="list">
+      <div v-if="list.length > 0">
         <div class="friends">
           <ul class="content">
             <li v-for="item in list" :key="item._id" class="friendsfriends">
@@ -33,6 +33,11 @@
               <button class="addFriend" v-on:click="addfriend(item._id)">Send Request</button>
             </li>
           </ul>
+        </div>
+      </div>
+      <div class="noresults" v-else-if="searched">
+        <div class="content">
+          <span class="searchmsg">Search returned no results, try another username</span>
         </div>
       </div>
     </transition>
@@ -71,7 +76,12 @@ export default {
             headers: { token: this.$store.getters.token }
           }
         )
-        .then(response => (this.list = response.data))
+        .then(response => {
+          this.list = response.data;
+          console.log(typeof this.searched);
+          this.searched = true;
+          console.log(typeof this.searched);
+        })
         .catch(function(error) {
           console.log(error);
         });
@@ -83,9 +93,9 @@ export default {
           { id: this.$store.getters.userID, recid: f_id },
           { headers: { token: this.$store.getters.token } }
         )
-        .then(response => {   
-        console.log(response);
-         this.$swal.fire({
+        .then(response => {
+          console.log(response);
+          this.$swal.fire({
             text: "Friend request sent!",
             icon: "success",
             timer: 3000,
@@ -95,7 +105,7 @@ export default {
         })
         .catch(function(error) {
           console.log(error);
-           this.status = "error";
+          this.status = "error";
         });
     }
   },
@@ -103,7 +113,8 @@ export default {
     return {
       errors: [],
       input: null,
-      list: null,
+      list: [],
+      searched: false,
       status: null
     };
   },
@@ -112,5 +123,4 @@ export default {
 </script>
 
 <style>
-
 </style>

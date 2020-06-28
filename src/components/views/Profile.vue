@@ -34,42 +34,24 @@
              <input class="submitButton" type="submit" value="Save" />
             <ul id="v-for-object" class="demo">
               <li v-for="(value, index) in socialmedia" :key="index">
-                <label :for="value['name']+index">{{ value["name"] }}</label>
+                <label class="lblinput" :for="value['name']+index">{{ value["name"] }}</label>
                 <input
+                class="fldinput"
                   v-model="value['value']"
                   :id="value['name']+index"
                   type="text"
                   :placeholder="value['name']"
                   :name="value['name']"
                 />
-                <div class="groupField">
-                  <label class="typo__label">Privacy</label>
-                  <multiselect
-                    v-model="smgroups2[index]"
-                    :options="groups"
-                    :multiple="true"
-                    :close-on-select="false"
-                    :clear-on-select="false"
-                    :preserve-search="true"
-                    placeholder="Pick some"
-                    label="name"
-                    track-by="name"
-                    :preselect-first="true"
-                  >
-                    <template slot="selection" slot-scope="{ values, search, isOpen }">
-                      <span
-                        class="multiselect__single"
-                        v-if="values.length &amp;&amp; !isOpen"
-                      >{{ values.length }} options selected</span>
-                    </template>
-                  </multiselect>
-                </div>
-                <!--   <ul id="v-for-groups">
-                  <li v-for="(value, index) in groups" :key="index">
-                    <input type="checkbox" :id="value.name" :value="value.name" v-model="newfield" />
-                    <label for="value.name">{{value.name}}</label>
-                  </li>
-                </ul>-->
+	<label class="lock">
+    <input class="chkprivate" type="checkbox" :id="'checkbox'+index" v-model="value['privacy']">
+     <label class="lblprivate" :for="'checkbox'+index">{{value['privacy'] ? 'Private' : 'General'}}</label>
+  </label>
+
+               
+                
+                
+
                 <button class="btndelete" type="button" v-on:click="deleteField(index)">X</button>
               </li>
             </ul>
@@ -105,26 +87,7 @@ export default {
         )
         .then(response => {
           this.items = response;
-          // this.groups = this.items.data.groups;
-          for (const gp in this.items.data.groups) {
-            this.groups.push({ name: this.items.data.groups[gp].name });
-          }
-
           this.socialmedia = this.items.data.socialmedia;
-          var arr = [];
-          for (const sm in this.socialmedia) {
-            console.log(this.socialmedia[sm].group);
-            for (const smg in this.socialmedia[sm].group) {
-              console.log(this.socialmedia[sm].group[smg])
-            //  this.smgroups[sm] = this.socialmedia[sm].group;
-           /* arr.push({ name: this.socialmedia[sm]['group'] });
-            this.smgroups[sm] = arr;*/
-            }
-          }
-
-          console.log(arr);
-
-          console.log();
         })
         .catch(function(error) {
           console.log(error);
@@ -133,10 +96,9 @@ export default {
     update: function() {
       var data = {
         id: this.$store.getters.userID,
-
         sm: this.socialmedia
       };
-      console.log(this.newfield);
+
       this.$http
         .post(this.$api + "/user/update", data, {
           headers: { token: this.$store.getters.token }
@@ -162,7 +124,7 @@ export default {
         });
     },
     addField() {
-      this.socialmedia.push({ name: this.newfield, value: "", group: [1] });
+      this.socialmedia.push({ name: this.newfield, value: "", privacy: 'false' });
       this.newfield = "";
     },
     deleteField(item) {

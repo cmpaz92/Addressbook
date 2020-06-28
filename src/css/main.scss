@@ -1,9 +1,14 @@
 @import "https://fonts.googleapis.com/css?family=Roboto&display=swap";
 
+$break-small: 640px;
+$break-large: 1200px;
+
 $old-gold: #d5b942ff;
 $ash-gray: #bfcbc2ff;
-$dim-gray: #646965ff;
+$dim-gray: rgb(156, 156, 156);
+$dim-grayt: rgba(156, 156, 156, .8);
 $onyx: #363837ff;
+$onyxt: rgba(54, 56, 55, .8);
 $eerie-black: #1f2020ff;
 $rich-black-fogra-39: #080708ff;
 $dark-cornflower-blue: #203d84ff;
@@ -14,6 +19,7 @@ $ming: #16697aff;
 $orange-peel: #ffa62bff;
 $deep-space-sparkle: #4a6c6fff;
 $cadet: #5f686bff;
+$cadett: rgba(95, 104, 107, .8);
 $rose-taupe: #9c5a5dff;
 $red-salsa: #ed474aff;
 $sea-green: #0a8754ff;
@@ -21,8 +27,11 @@ $sea-green: #0a8754ff;
 $black: $eerie-black;
 $white: #efefef;
 $gray: $dim-gray;
+$grayt: $dim-grayt;
 $mediumgray: $cadet;
+$mediumgrayt: $cadett;
 $darkgray: $onyx;
+$darkgrayt: $onyxt;
 $green: $sea-green;
 $red: $red-salsa;
 $blue: $orange-peel;
@@ -75,6 +84,9 @@ html {
         &:hover {
             font-weight: bold;
         }
+        @media screen and (max-width: $break-small) {
+            padding: 15px 10px;
+        }
     }
     div {
         padding: 15px;
@@ -86,6 +98,10 @@ html {
     }
     a.home {
         background-color: $red;
+    }
+    @media screen and (max-width: $break-small) {
+        margin: 20px 0;
+        overflow: scroll;
     }
 }
 div#nav {
@@ -118,9 +134,28 @@ a {
     color: $white;
     cursor: pointer;
 }
-#signupform {
-    label {
-        width: 30%;
+#signupForm {
+
+    div {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        label {
+            display: block;
+            width: 80px;
+            text-align: left;
+        }
+        input {
+            margin-top: 0;
+            @media screen and (max-width: $break-small) {
+                max-width: 150px;
+            }
+        }
+    }
+    .submitButton {
+        margin-top: 40px;
+        margin-bottom: 20px;
     }
 }
 #loginForm {
@@ -137,6 +172,10 @@ a {
         }
         input {
             margin-top: 0;
+            @media screen and (max-width: $break-small) {
+                max-width: 150px;
+            }
+         
         }
     }
     .submitButton {
@@ -234,7 +273,7 @@ input.submitButton {
     color: $white;
     margin: auto;
     width: 50%;
-    background-color: $darkgray;
+    background-color: $darkgrayt;
     border: 0px solid #000000;
     -webkit-box-shadow: 14px 15px 0px -3px#394140;
     -moz-box-shadow: 14px 15px 0px -3px#394140;
@@ -246,6 +285,7 @@ input.submitButton {
     #searchForm {
         input {
             color: $white;
+            max-width: 150px;
             &:hover {
                 border-color: $ming;
             }
@@ -257,7 +297,7 @@ input.submitButton {
     color: $white;
     margin: auto;
     width: 50%;
-    background-color: $gray;
+    background-color: $grayt;
     border: 0px solid #000000;
     -webkit-box-shadow: 14px 15px 0px -3px#394140;
     -moz-box-shadow: 14px 15px 0px -3px#394140;
@@ -266,6 +306,10 @@ input.submitButton {
     -moz-border-radius: 8px 8px 8px 8px;
     -webkit-border-radius: 8px 8px 8px 8px;
     margin-top: 40px;
+    @media screen and (max-width: $break-small) {
+    padding: 5px 10px 20px 10px;
+    width: 90%;
+    }
 }
 
 .errors {
@@ -310,23 +354,46 @@ button.getStartedButton {
             justify-content: center;
             padding: 20px 5%;
             flex-wrap: wrap;
+            @media screen and (max-width: $break-small) {
+                padding: 20px 5%;
+            }
         }
     }
     li {
-        > label {
+        .lblinput {
             text-transform: capitalize;
             width: 20%;
             font-size: 1rem;
             font-weight: bold;
             overflow: hidden;
         }
-        > input {
+        .fldinput {
             font-size: 1.2rem;
             width: 30%;
+            &::placeholder {
+                color: rgba(200, 200, 200, 0.5);
+            }
+        }
+        .lock {
+            width: 20%;
+            .lblprivate {
+            }
+            .chkprivate {
+                margin: 0;
+                margin-right: 10px;
+            }
         }
         &:hover {
             background-color: $darkgray;
             color: $white;
+        }
+
+        .btndelete {
+            @media screen and (max-width: $break-small) {
+                padding: 8px 10px;
+                font-size: 16px;
+                margin-left: 10px;
+            }
         }
     }
     .groupField {
@@ -347,7 +414,7 @@ button.getStartedButton {
     #newfield {
         margin-right: 25px;
         &::placeholder {
-            color: $darkgray;
+            color: $white;
         }
     }
 }
@@ -384,6 +451,9 @@ button.getStartedButton {
     min-height: 400px;
     color: $white;
     overflow: auto;
+    @media screen and (max-width: $break-small) {
+        width: 95%;
+    }
 }
 .innercontainer {
     margin: auto;
@@ -392,29 +462,50 @@ button.getStartedButton {
     .left {
         width: 50%;
         font-size: 20px;
-        background-color: $darkgray;
+        background-color: $darkgrayt;
+        @media screen and (max-width: $break-small) {
+            width: 40%;
+            overflow: hidden;
+        }
     }
     .right {
         width: 50%;
         font-size: 20px;
-        background-color: $mediumgray;
+        background-color: $mediumgrayt;
+        @media screen and (max-width: $break-small) {
+            width: 60%;
+        }
+        .btnupdate {
+            width: 10%;
+            @include button-border($green);
+            margin-left: 20px;
+            margin-right: 5%;
+            @media screen and (max-width: $break-small) {
+            margin-top: 10px;
+            }
+        }
+        .lblprivacy{
+font-size: 16px;
+        }
     }
 }
 
 #profile {
-    padding: 20px 20px 20px 20px;
+    // padding: 20px 20px 20px 20px;
     font-size: 20px;
     min-height: unset;
-    background-color: $darkgray;
+    background-color: $darkgrayt;
 }
 #profilesn {
     font-size: 20px;
-    background-color: $mediumgray;
+    background-color: $mediumgrayt;
 }
 #profilesn {
+    margin-bottom: 70px;
     .innercontainer {
         width: 100%;
         margin: unset;
+        padding: 10px 0 40px;
     }
 }
 .header {
@@ -426,6 +517,9 @@ button.getStartedButton {
     align-items: center;
     border-bottom: solid 2px $white;
     margin-bottom: 30px;
+    @media screen and (max-width: $break-small) {
+        width: 90%;
+    }
 }
 .contactContainer {
     display: flex;
@@ -455,18 +549,25 @@ button.getStartedButton {
 }
 .userinfo {
     h3 {
-        span {
-            float: none;
-            font-size: 15px;
+    }
+    span {
+        float: none;
+        font-size: 15px;
+        text-shadow: 0px 0px 2px rgba(150, 150, 150, 1);
+        padding-left: 10px;
+        display: block;
+        &.username {
             color: $blue;
-            text-shadow: 0px 0px 2px rgba(150, 150, 150, 1);
+        }
+        &.email {
+            color: $blue;
         }
     }
     li {
         height: 15px;
         cursor: unset;
     }
-    span {
+    .smitem {
         float: left;
         padding-left: 10px;
     }
@@ -476,6 +577,10 @@ button.getStartedButton {
         span {
             font-size: 12px;
             color: $blue;
+            @media screen and (max-width: $break-small) {
+                display: none;
+            }
+            
         }
         li {
             display: flex;
@@ -492,6 +597,7 @@ button.getStartedButton {
                 background-color: $black;
             }
         }
+     
     }
     li {
         display: flex;
@@ -512,6 +618,11 @@ button.getStartedButton {
             width: 60%;
             text-align: center;
         }
+    }
+}
+.noresults{
+    .content{
+        padding: 25px 40px 25px 40px;
     }
 }
 .friends {
@@ -536,6 +647,10 @@ button.getStartedButton {
     &:hover {
         background-color: $black;
     }
+    &:first-child:nth-last-child(1) {
+        /* -or- li:only-child { */
+            border-bottom: 0;
+        }
 }
 .searchItem {
     min-width: 100px;
