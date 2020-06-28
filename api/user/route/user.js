@@ -213,19 +213,19 @@ router.post("/updateprivacy", auth, async (req, res) => {
     var p = req.body.privacy;
     if (id.match(/^[0-9a-fA-F]{24}$/)) {
       const us = await User.findById(id);
-      
+
       var arrpriv = [];
-      arrpriv= us.private;
-    
+      arrpriv = us.private;
+
       if (p === true) {
-        if(arrpriv.indexOf(uid)<0){
+        if (arrpriv.indexOf(uid) < 0) {
           us.private.push(uid);
           us.save();
         }
       } else if (p === false) {
-        if(arrpriv.indexOf(uid)>0){
-        us.private.pull(uid);
-        us.save();
+        if (arrpriv.indexOf(uid) > 0) {
+          us.private.pull(uid);
+          us.save();
         }
       }
       res.json("User Updated");
@@ -271,13 +271,13 @@ router.post("/getcontact", auth, async (req, res) => {
     if (id.match(/^[0-9a-fA-F]{24}$/) && uid.match(/^[0-9a-fA-F]{24}$/)) {
       const userA = await User.findById(id);//requester
       //If UserB has userA in his list
-      const userB = await User.findById(uid); 
+      const userB = await User.findById(uid);
       const private = userB.private;
       var arrpriv = [];
       const socialm = [];
       //If user is in private list
-      arrpriv= userB.private;    
-      if (arrpriv.indexOf(id)>0) {
+      arrpriv = userB.private;
+      if (arrpriv.indexOf(id) > 0) {
         for (var sm in userB.socialmedia) {
           socialm.push(userB.socialmedia[sm])
         }
@@ -322,7 +322,7 @@ router.post("/permission", auth, async (req, res) => {
       const private = userA.private;
 
       //If user is in private list
-      if (private.indexOf(uid)>=0) {
+      if (private.indexOf(uid) >= 0) {
         res.json('true');
       } else {
         res.json('false');
