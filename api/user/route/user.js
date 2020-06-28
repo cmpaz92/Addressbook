@@ -223,7 +223,7 @@ router.post("/updateprivacy", auth, async (req, res) => {
           us.save();
         }
       } else if (p === false) {
-        if (arrpriv.indexOf(uid) > 0) {
+        if (arrpriv.indexOf(uid) >= 0) {
           us.private.pull(uid);
           us.save();
         }
