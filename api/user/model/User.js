@@ -25,9 +25,9 @@ const UserSchema = mongoose.Schema({
   socialmedia: {
     type: Object,
     default: [
-      { name: "phone", value: "", privacy: 'false' },
-      { name: "facebook", value: "", privacy: 'false' },
-      { name: "twitter", value: "", privacy: 'false' },
+      { name: "phone", value: "", privacy: false },
+      { name: "facebook", value: "", privacy: false },
+      { name: "twitter", value: "", privacy: false },
     ]
   },
   groups: {

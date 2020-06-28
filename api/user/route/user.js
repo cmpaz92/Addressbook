@@ -211,15 +211,22 @@ router.post("/updateprivacy", auth, async (req, res) => {
     var id = req.body.id;
     var uid = req.body.uid;
     var p = req.body.privacy;
-
     if (id.match(/^[0-9a-fA-F]{24}$/)) {
+      const us = await User.findById(id);
+      
+      var arrpriv = [];
+      arrpriv= us.private;
+    
       if (p === true) {
-        const us = await User.findByIdAndUpdate(id, { $push: { private: uid } })
-
+        if(arrpriv.indexOf(uid)<0){
+          us.private.push(uid);
+          us.save();
+        }
       } else if (p === false) {
-        const us = await User.findById(id)
+        if(arrpriv.indexOf(uid)>0){
         us.private.pull(uid);
         us.save();
+        }
       }
       res.json("User Updated");
 
@@ -261,19 +268,22 @@ router.post("/getcontact", auth, async (req, res) => {
   try {
     var id = req.body.id;
     var uid = req.body.uid;
-    if (id.match(/^[0-9a-fA-F]{24}$/) && id.match(/^[0-9a-fA-F]{24}$/)) {
+    if (id.match(/^[0-9a-fA-F]{24}$/) && uid.match(/^[0-9a-fA-F]{24}$/)) {
       const userA = await User.findById(id);//requester
-      const userB = await User.findById(uid);
-      const private = userA.private;
+      //If UserB has userA in his list
+      const userB = await User.findById(uid); 
+      const private = userB.private;
+      var arrpriv = [];
       const socialm = [];
       //If user is in private list
-      if (private.find(element => element = uid) != null) {
+      arrpriv= userB.private;    
+      if (arrpriv.indexOf(id)>0) {
         for (var sm in userB.socialmedia) {
           socialm.push(userB.socialmedia[sm])
         }
       } else {
         for (var sm in userB.socialmedia) {
-          if (userB.socialmedia[sm].privacy == false) {
+          if (userB.socialmedia[sm].privacy === false) {
             socialm.push(userB.socialmedia[sm])
           }
         }
@@ -304,6 +314,7 @@ router.post("/getcontact", auth, async (req, res) => {
 router.post("/permission", auth, async (req, res) => {
   try {
     // request.user is getting fetched from Middleware after token authentication
+    // Check if user is in my private list
     var id = req.body.id;
     var uid = req.body.uid;
     if (id.match(/^[0-9a-fA-F]{24}$/) && id.match(/^[0-9a-fA-F]{24}$/)) {
@@ -311,7 +322,7 @@ router.post("/permission", auth, async (req, res) => {
       const private = userA.private;
 
       //If user is in private list
-      if (private.find(element => element = uid) != null) {
+      if (private.indexOf(uid)>=0) {
         res.json('true');
       } else {
         res.json('false');
