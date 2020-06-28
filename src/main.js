@@ -7,6 +7,7 @@ import Multiselect from 'vue-multiselect';1;
 import Swal from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
+import './registerServiceWorker'
 /*import { library } from '@fortawesome/fontawesome-svg-core'
 import { faUserSecret, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
